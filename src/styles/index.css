@@ -1,3 +1,16 @@
+@font-face {
+  font-family: "Billabong";
+  src: local("Billabong"),
+    url("./../assets/fonts/billabong.ttf") format("truetype");
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import "./shadow.css";
+
+.logo__text {
+  font-family: "Billabong";
+  src: url("./../assets/fonts/billabong.ttf") format("truetype");
+}
