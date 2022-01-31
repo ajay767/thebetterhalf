@@ -23,7 +23,7 @@ function Landing() {
               Doloribus aut quas sapiente quod iste sit.
             </h4>
           </div>
-          <div className="shadow-md p-2 pl-4 rounded-md flex items-center w-11/12 md:w-[440px]">
+          <div className="shadow-md p-2 pl-4 bg-white rounded-md flex items-center w-11/12 md:w-[440px]">
             <input
               className=" text-sm md:text-base text-gray-700 flex-grow border-0 outline-none"
               placeholder="Enter your email"

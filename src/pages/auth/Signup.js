@@ -31,6 +31,14 @@ function Signup() {
               placeholder="Password"
             />
           </div>
+          <div className="flex flex-col">
+            <label className="text-sm mb-1">Confirm Password</label>
+            <input
+              type="password"
+              className="text-sm rounded p-2 pl-4 outline-none border-0 ring-1 ring-gray-300 "
+              placeholder="Confirm Password"
+            />
+          </div>
           <div>
             <input
               className="h-4 w-4 text-pink-600 rounded-sm mr-2 outline-none ring-0"
