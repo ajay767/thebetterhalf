@@ -28,6 +28,7 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
+  console.log('GEEE');
   try {
     const { username, email, password } = req.body;
     if (!username && !email) {
@@ -35,8 +36,22 @@ exports.login = async (req, res, next) => {
     }
     const key = email ? 'email' : 'username';
     const value = email ? email : username;
-    const user = User.findOne({
+    //console.log(value);
+    const user = await User.findOne({
       [key]: value,
+    }).select('+password');
+    console.log(user);
+    if (!user || !(await user.correctPassword(password, user.password))) {
+      return next(new AppError('Invalid Email or Password'), 400);
+    }
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    user.password = undefined;
+    res.status(200).json({
+      status: 'success',
+      user,
+      token,
     });
-  } catch (err) {}
+  } catch (err) {
+    next(err);
+  }
 };
