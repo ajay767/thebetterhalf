@@ -1,10 +1,21 @@
-const dotenv = require("dotenv");
-dotenv.config({ path: "./config.env" });
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+dotenv.config({
+  path: './config.env',
+});
 
-const app = require("./app");
-app.listen(process.env.PORT, (err) => {
-  if (err) {
-    console.log("ERROR=", err);
-  }
-  console.log(`Server is up and running on PORT ${process.env.PORT}`);
+const app = require('./app');
+const port = process.env.PORT || 3000;
+
+const DB = process.env.DATABASE_URL.replace(
+  '<PASSWORD>',
+  process.env.DATABASE_PASSWORD
+);
+mongoose.connect(DB).then((con) => {
+  // console.log(con.connection);
+  console.log('DB connection success');
+});
+
+app.listen(port, () => {
+  console.log(`app running on port ${port}`);
 });
