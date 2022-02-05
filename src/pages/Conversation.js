@@ -9,6 +9,23 @@ import Wrapper from "@layout/Wrapper";
 import user1 from "@assets/images/p1.jpg";
 import user2 from "@assets/images/p4.jpg";
 import user3 from "@assets/images/p5.jpg";
+
+function Received({ message }) {
+  return (
+    <div className="p-2 bg-slate-200 text-sm  rounded-r-lg  rounded-tl-lg   rounded-sm max-w-[75%] w-max ">
+      {message}
+    </div>
+  );
+}
+
+function Sent({ message }) {
+  return (
+    <div className="p-2 bg-pink-600 text-sm rounded-l-lg     rounded-tr-lg     rounded-sm max-w-[75%] w-max  ml-auto text-white ">
+      {message}
+    </div>
+  );
+}
+
 function Conversation() {
   return (
     <Wrapper>
@@ -74,47 +91,13 @@ function Conversation() {
           <span className="text-xs text-white bg-gray-500 shadow mx-auto block w-max p-1 px-2 rounded">
             Today
           </span>
-          <div className="p-2 bg-slate-200 rounded-sm max-w-[75%] w-max ">
-            Hello
-          </div>
-          <div className="p-2 bg-pink-600 rounded-l-lg     rounded-tr-lg     rounded-sm max-w-[75%] w-max  ml-auto text-white ">
-            Heyy!!
-          </div>
-          <div className="p-2 bg-pink-600 rounded-l-lg     rounded-tr-lg      rounded-sm max-w-[75%] w-max  ml-auto text-white ">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas
+          <Sent message={"Hello"} />
+          <Received
+            message="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptas
             molestiae necessitatibus vero tenetur ullam praesentium. Maxime
             aperiam laudantium consectetur, molestias numquam doloremque odit
-            distinctio officiis sapiente cumque quidem aut fugit!
-          </div>
-          <div className="  rounded-lg overflow-hidden max-w-[75%] w-max  ml-auto text-white ">
-            <img src={user3} alt="share" className="rounded h-52" />
-          </div>
-          <div className="p-2 bg-slate-200 rounded-sm max-w-[75%] w-max ">
-            H tenetur ullam praesentium. Maxime aperiam laudantium consectetur,
-            molestias numquam doloremque odit distinctio officiis sapiente
-            cumque quidem
-          </div>
-          <div className=" bg-slate-200 rounded-sm max-w-[75%] w-max ">
-            <img src={user2} alt="share" className="rounded h-52" />
-          </div>
-          <div className="p-2 bg-pink-600 rounded-l-lg     rounded-tr-lg     rounded-sm max-w-[75%] w-max  ml-auto text-white ">
-            Lorem ipsum dolor sit amet consectetur pariatur dicta asperiores.
-          </div>
-          <div className="p-2 bg-pink-600 rounded-l-lg     rounded-tr-lg     rounded-sm max-w-[75%] w-max  ml-auto text-white ">
-            Lorem ipsum dolor sit Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Nesciunt iure commodi quam dolore odio, quis optio
-            fugiat magnam nam laborum necessitatibus adipisci tenetur minus
-            voluptas repellat iusto aliquid? Dolorum, debitis! amet consectetur
-            pariatur dicta asperiores.
-          </div>
-          <div className="  rounded-sm max-w-[75%] w-max  ml-auto text-white ">
-            <img src={user3} alt="share" className="rounded h-52" />
-          </div>
-          <div className="p-2 bg-slate-200 rounded-sm max-w-[75%] w-max ">
-            H tenetur ullam praesentium. Maxime aperiam laudantium consectetur,
-            molestias numquam doloremque odit distinctio officiis sapiente
-            cumque quidem
-          </div>
+            distinctio officiis sapiente cumque quidem aut fugit!"
+          />
         </div>
         <div className="p-2 flex-shrink-0 flex items-start gap-2 sticky bottom-0 bg-white ">
           <input

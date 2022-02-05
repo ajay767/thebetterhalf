@@ -6,7 +6,7 @@ function App() {
     document.title = "Find your better half";
   }, []);
   return (
-    <div className="App bg-slate-100 min-h-screen md:p-4  text-gray-700">
+    <div className="App bg-slate-100 min-h-screen   text-gray-700">
       <Router />
     </div>
   );
