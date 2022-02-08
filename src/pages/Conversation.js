@@ -12,16 +12,20 @@ import user3 from "@assets/images/p5.jpg";
 
 function Received({ message }) {
   return (
-    <div className="p-2 bg-slate-200 text-sm  rounded-r-lg  rounded-tl-lg   rounded-sm max-w-[75%] w-max ">
+    <div className="p-2 bg-slate-200 text-gray-500 text-sm  rounded-r-lg  rounded-tl-lg   rounded-sm max-w-[75%] w-max ">
       {message}
+      <span className="text-[12px]  block text-right text-gray-600">
+        3:20 PM
+      </span>
     </div>
   );
 }
 
 function Sent({ message }) {
   return (
-    <div className="p-2 bg-pink-600 text-sm rounded-l-lg     rounded-tr-lg     rounded-sm max-w-[75%] w-max  ml-auto text-white ">
+    <div className="p-2 bg-pink-600 text-sm rounded-l-lg   min-w-[90px]  rounded-tr-lg     rounded-sm max-w-[75%] w-max  ml-auto text-white ">
       {message}
+      <span className="text-[12px]  block text-left text-white">3:20 PM</span>
     </div>
   );
 }
@@ -29,8 +33,7 @@ function Sent({ message }) {
 function Conversation() {
   return (
     <Wrapper>
-      {/* <Header /> */}
-      <div className="flex flex-col min-h-[95vh] relative">
+      <div className="flex flex-col min-h-screen relative ">
         <div className="flex items-center gap-2 p-4 bg-white py-2 justify-between flex-shrink-0 sticky top-0">
           <div className="flex items-center gap-2 ">
             <img
@@ -87,7 +90,7 @@ function Conversation() {
             </span>
           </Tippy>
         </div>
-        <div className="p-2 flex-grow overflow-y-scroll  scrollbar-hide flex flex-col text-sm md:text-xs gap-2 ">
+        <div className="border-t-[1px] border-gray-200 p-3 flex-grow overflow-y-scroll  scrollbar-hide flex flex-col text-sm md:text-xs gap-2 ">
           <span className="text-xs text-white bg-gray-500 shadow mx-auto block w-max p-1 px-2 rounded">
             Today
           </span>
@@ -99,7 +102,7 @@ function Conversation() {
             distinctio officiis sapiente cumque quidem aut fugit!"
           />
         </div>
-        <div className="p-2 flex-shrink-0 flex items-start gap-2 sticky bottom-0 bg-white ">
+        <div className="bg-slate-400 p-2 flex-shrink-0 flex items-end gap-2 sticky bottom-0  ">
           <input
             className="hidden "
             type="file"
@@ -107,17 +110,16 @@ function Conversation() {
             name="chat_media"
           />
           <label htmlFor="chat_media" className="cursor-pointer  ">
-            <span className="h-10 w-10 flex-shrink-0 rounded-full bg-slate-100  flex items-center justify-center">
-              <MdInsertPhoto size={24} className="text-slate-600" />
+            <span className="h-9 w-9 flex-shrink-0 rounded-full bg-transparent    flex items-center justify-center">
+              <MdInsertPhoto size={22} className="text-white" />
             </span>
           </label>
           <textarea
-            rows={2}
             placeholder="Message"
-            className="w-full text-sm md:text-xs ring-0 border-0 focus:ring-0 bg-slate-100 rounded-sm"
+            className="w-full min-h-[36px] max-h-[120px] text-sm  ring-0 border-0 focus:ring-0 bg-white  rounded-md"
           ></textarea>
-          <span className="h-10 w-10 flex-shrink-0 rounded-full bg-slate-100  flex items-center justify-center">
-            <RiSendPlaneFill size={22} className="text-slate-600" />
+          <span className="h-9 w-9 flex-shrink-0 rounded-full bg-transparent   cursor-pointer  flex items-center justify-center">
+            <RiSendPlaneFill size={22} className="text-white" />
           </span>
         </div>
       </div>

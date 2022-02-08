@@ -39,7 +39,7 @@ function Chat() {
   return (
     <Wrapper className="py-4 p-4">
       <Header />
-      <div className="md:w-6/12">
+      <div className="md:w-6/12 ">
         <h2 className="text-base font-medium mb-4">Recent Messages</h2>
         <Chatcard
           activeStatus={"Active 1 hr ago"}
