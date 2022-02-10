@@ -32,11 +32,13 @@ function profile() {
       <Header />
 
       <div>
-        <img
-          src={user2}
-          alt="user"
-          className="h-24 w-24 rounded-full object-cover mx-auto my-4"
-        />
+        <div className="h-28  w-28  rounded-full p-1 ring-2 ring-pink-600 mx-auto my-4">
+          <img
+            src={user2}
+            alt="user"
+            className=" h-full w-full rounded-full object-cover "
+          />
+        </div>
         <p className="text-lg font-medium text-center">Anamika Singh</p>
         <p className="text-sm font-medium text-pink-600 text-center">
           4.7K views

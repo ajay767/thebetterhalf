@@ -17,7 +17,7 @@ function Landing() {
             <h1 className="text-gray-700  text-4xl md:text-5xl font-bold mb-4">
               Find Your Better Half 😍
             </h1>
-            <h4 className=" text-sm md:text-base text-gray-700 mb-8 w-11/12 md:w-10/12">
+            <h4 className=" text-lg md:text-base text-gray-700 mb-8 w-11/12 md:w-10/12">
               <span className="text-2xl font-medium mb-2 block">
                 Simple, Secure, Reliable messaging.
               </span>

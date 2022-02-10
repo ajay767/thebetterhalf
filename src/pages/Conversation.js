@@ -12,9 +12,9 @@ import user3 from "@assets/images/p5.jpg";
 
 function Received({ message }) {
   return (
-    <div className="p-2 bg-slate-200 text-gray-500 text-sm  rounded-r-lg  rounded-tl-lg   rounded-sm max-w-[75%] w-max ">
+    <div className="p-2 bg-slate-200 text-gray-600 text-sm  rounded-r-lg  rounded-tl-lg   rounded-sm max-w-[75%] w-max ">
       {message}
-      <span className="text-[12px]  block text-right text-gray-600">
+      <span className="text-[12px]  block text-right text-gray-400">
         3:20 PM
       </span>
     </div>
@@ -25,7 +25,9 @@ function Sent({ message }) {
   return (
     <div className="p-2 bg-pink-600 text-sm rounded-l-lg   min-w-[90px]  rounded-tr-lg     rounded-sm max-w-[75%] w-max  ml-auto text-white ">
       {message}
-      <span className="text-[12px]  block text-left text-white">3:20 PM</span>
+      <span className="text-[12px]  block text-left text-gray-200">
+        3:20 PM
+      </span>
     </div>
   );
 }
@@ -115,6 +117,7 @@ function Conversation() {
             </span>
           </label>
           <textarea
+            rows={1}
             placeholder="Message"
             className="w-full min-h-[36px] max-h-[120px] text-sm  ring-0 border-0 focus:ring-0 bg-white  rounded-md"
           ></textarea>

@@ -15,9 +15,11 @@ function Header() {
           </span>
         </div>
       </div>
-      <h1 className=" font-medium text-3xl text-center logo__text">
-        Better<span className="text-pink-600">half</span>
-      </h1>
+      <Link to="/home">
+        <h1 className=" font-medium text-3xl text-center logo__text">
+          Better<span className="text-pink-600">half</span>
+        </h1>
+      </Link>
       <div>
         <Tippy
           interactive
@@ -33,6 +35,12 @@ function Header() {
                 className="text-sm px-4 p-2 block hover:bg-black text-white"
               >
                 Profile
+              </Link>
+              <Link
+                to="/notification"
+                className="text-sm px-4 p-2 block hover:bg-black text-white"
+              >
+                Notification
               </Link>
               <Link
                 to="/chat"
