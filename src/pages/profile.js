@@ -40,9 +40,7 @@ function profile() {
           />
         </div>
         <p className="text-lg font-medium text-center">Anamika Singh</p>
-        <p className="text-sm font-medium text-pink-600 text-center">
-          4.7K views
-        </p>
+        <p className="text-sm font-medium  text-center">Hustle 🔥</p>
         <div className="flex gap-2 w-max mx-auto my-2">
           <span className="hover:bg-pink-600 hover:text-white cursor-pointer   text-pink-600 text-xs p-2 px-4 rounded-full ring-1 ring-pink-600 block">
             Adventure

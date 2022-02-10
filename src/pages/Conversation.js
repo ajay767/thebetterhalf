@@ -12,11 +12,18 @@ import user3 from "@assets/images/p5.jpg";
 
 function Received({ message }) {
   return (
-    <div className="p-2 bg-slate-200 text-gray-600 text-sm  rounded-r-lg  rounded-tl-lg   rounded-sm max-w-[75%] w-max ">
-      {message}
-      <span className="text-[12px]  block text-right text-gray-400">
-        3:20 PM
-      </span>
+    <div className="flex items-end gap-2">
+      <img
+        src={user1}
+        alt="Anamika"
+        className="h-8 w-8 rounded-full object-cover flex-shrink-0"
+      />
+      <div className="p-2 bg-slate-200 text-gray-600 text-sm  rounded-r-lg  rounded-tl-lg   rounded-sm max-w-[70%] w-max ">
+        {message}
+        <span className="text-[12px]  block text-right text-gray-400">
+          3:20 PM
+        </span>
+      </div>
     </div>
   );
 }

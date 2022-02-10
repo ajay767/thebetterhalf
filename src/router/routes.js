@@ -7,6 +7,8 @@ import Profile from "@pages/profile";
 import Chat from "@pages/chat";
 import Conversation from "@pages/Conversation";
 import Notification from "@pages/Notification";
+import Friends from "../pages/friends";
+
 const routes = [
   { path: "/launch", component: Landing, auth: [], exact: true },
   { path: "/login", component: Login, auth: [], exact: true },
@@ -18,6 +20,7 @@ const routes = [
     exact: true,
   },
   { path: "/home", component: Home, auth: [], exact: true },
+  { path: "/friends", component: Friends, auth: [], exact: false },
   { path: "/notification", component: Notification, auth: [], exact: true },
   { path: "/profile", component: Profile, auth: [], exact: true },
   { path: "/chat", component: Chat, auth: [], exact: true },

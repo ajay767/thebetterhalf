@@ -49,6 +49,12 @@ function Header() {
                 Message
               </Link>
               <Link
+                to="/friends"
+                className="text-sm px-4 p-2 block hover:bg-black text-white"
+              >
+                Friends
+              </Link>
+              <Link
                 to="/home"
                 className="text-sm px-4 p-2 block hover:bg-black text-white"
               >
