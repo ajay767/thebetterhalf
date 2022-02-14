@@ -1,5 +1,7 @@
-const app = require("./../app");
+const authRouter = require("./authRoutes.js");
+const friendRouter = require("./friendRoute");
 
-const authRouter = reqire("./authRoutes.js");
-
-app.use("/api/v1/auth", authRouter);
+module.exports = {
+  authRouter,
+  friendRouter,
+};
