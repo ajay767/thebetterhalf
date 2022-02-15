@@ -1,24 +1,37 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const bcryptjs = require('bcryptjs');
-const crypto = require('crypto');
+const mongoose = require("mongoose");
+const validator = require("validator");
+const bcryptjs = require("bcryptjs");
+const crypto = require("crypto");
+
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
+    trim: true,
   },
   lastName: {
     type: String,
+    trim: true,
   },
   username: {
     type: String,
     unique: true,
-    required: [true, 'Please Provide a valid user name'],
+    trim: true,
+    required: [true, "Please Provide a valid user name"],
   },
+  tags: [String],
   email: {
     type: String,
     unique: true,
-    validate: [validator.isEmail, 'Please provide a valid email'],
-    required: [true, 'Please Provide an Email'],
+    trim: true,
+    validate: [validator.isEmail, "Please provide a valid email"],
+    required: [true, "Please Provide an Email"],
+  },
+  mobile: {
+    type: String,
+    index: {
+      unique: true,
+      partialFilterExpression: { mobile: { $type: "string" } },
+    },
   },
   password: {
     type: String,
@@ -29,8 +42,10 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
 });
 
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
+userSchema.index({ email: 1, mobile: 1 }, { unique: true });
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
     return next();
   }
   this.password = await bcryptjs.hash(this.password, 12);
@@ -55,5 +70,5 @@ userSchema.methods.correctPassword = async function (
 //      return resetToken;
 // }
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 module.exports = User;

@@ -17,31 +17,30 @@ exports.signup = async (req, res, next) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     user.password = undefined;
     res.status(201).json({
-      status: "User Created",
+      status: true,
+      message: "User created",
       user,
       token,
     });
   } catch (err) {
+    console.log(err, "from catch");
     next(err);
   }
 };
 
 exports.login = async (req, res, next) => {
-  console.log("GEEE");
   try {
-    const { username, email, password } = req.body;
-    if (!username && !email) {
-      return next(new AppError("Must have username or email", 404));
+    const { password, type, value } = req.body;
+    if (!value) {
+      return next(new AppError("Invalid credientials", 404));
     }
-    const key = email ? "email" : "username";
-    const value = email ? email : username;
-    //console.log(value);
+
     const user = await User.findOne({
-      [key]: value,
+      [type]: value,
     }).select("+password");
-    console.log(user);
+
     if (!user || !(await user.correctPassword(password, user.password))) {
-      return next(new AppError("Invalid Email or Password"), 400);
+      return next(new AppError("Invalid Email or Password", 400));
     }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     user.password = undefined;
@@ -49,6 +48,7 @@ exports.login = async (req, res, next) => {
       status: "success",
       user,
       token,
+      message: "success",
     });
   } catch (err) {
     next(err);
