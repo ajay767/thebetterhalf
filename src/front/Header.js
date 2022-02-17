@@ -1,10 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { useAuth } from "@context/authContext";
 import profile from "@assets/images/friend-landing.jpg";
 import { IoNotificationsSharp } from "react-icons/io5";
 import Tippy from "@tippyjs/react";
 
 function Header() {
+  const history = useHistory();
+  const { signOut } = useAuth();
   return (
     <div className="grid grid-cols-3 sticky bg-white z-[1000] top-0 py-2 ">
       <div className="  mt-2">
@@ -55,17 +58,17 @@ function Header() {
                 Friends
               </Link>
               <Link
-                to="/home"
+                to="/setting"
                 className="text-sm px-4 p-2 block hover:bg-black text-white"
               >
                 Setting
               </Link>
-              <Link
-                to="/login"
-                className="text-sm px-4 p-2 block hover:bg-black text-white"
+              <p
+                onClick={() => signOut(history)}
+                className="text-sm cursor-pointer px-4 p-2 block hover:bg-black text-white"
               >
                 Logout
-              </Link>
+              </p>
             </div>
           }
         >

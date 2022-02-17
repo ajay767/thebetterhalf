@@ -15,6 +15,7 @@ import profile2 from "@assets/images/user2.jpeg";
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import { RiSendPlaneFill } from "react-icons/ri";
+import { useAuth } from "@context/authContext";
 
 function FeedCard({ image, liked }) {
   const [reacted, setreacted] = useState(liked);
@@ -97,6 +98,8 @@ function FeedCard({ image, liked }) {
 }
 
 function Home() {
+  const user = useAuth();
+  console.log(user, "home");
   return (
     <Wrapper className="py-4 p-4">
       <Header />

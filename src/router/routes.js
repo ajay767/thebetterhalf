@@ -7,24 +7,25 @@ import Profile from "@pages/profile";
 import Chat from "@pages/chat";
 import Conversation from "@pages/Conversation";
 import Notification from "@pages/Notification";
-import Friends from "../pages/friends";
-
+import Friends from "@pages/friends";
+import Setting from "@pages/setting";
 const routes = [
-  { path: "/launch", component: Landing, auth: [], exact: true },
-  { path: "/login", component: Login, auth: [], exact: true },
-  { path: "/signup", component: Signup, auth: [], exact: true },
+  { path: "/launch", component: Landing, auth: false, exact: true },
+  { path: "/login", component: Login, auth: false, exact: true },
+  { path: "/signup", component: Signup, auth: false, exact: true },
   {
     path: "/forget-password",
     component: ForgetPassword,
-    auth: [],
+    auth: false,
     exact: true,
   },
-  { path: "/home", component: Home, auth: [], exact: true },
-  { path: "/friends", component: Friends, auth: [], exact: false },
-  { path: "/notification", component: Notification, auth: [], exact: true },
-  { path: "/profile", component: Profile, auth: [], exact: true },
-  { path: "/chat", component: Chat, auth: [], exact: true },
-  { path: "/chat/:id", component: Conversation, auth: [], exact: true },
+  { path: "/home", component: Home, auth: true, exact: true },
+  { path: "/friends", component: Friends, auth: true, exact: false },
+  { path: "/notification", component: Notification, auth: true, exact: true },
+  { path: "/profile", component: Profile, auth: true, exact: true },
+  { path: "/setting", component: Setting, auth: true, exact: true },
+  { path: "/chat", component: Chat, auth: true, exact: true },
+  { path: "/chat/:id", component: Conversation, auth: true, exact: true },
 ];
 
 export default routes;

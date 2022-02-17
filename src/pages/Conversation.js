@@ -1,15 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdInsertPhoto } from "react-icons/md";
 import { RiSendPlaneFill } from "react-icons/ri";
+import socketio from "socket.io-client";
 import Tippy from "@tippyjs/react";
 import Wrapper from "@layout/Wrapper";
+import SocketIOFileUpload from "socketio-file-upload";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 import user1 from "@assets/images/p1.jpg";
 import user2 from "@assets/images/p4.jpg";
 import user3 from "@assets/images/p5.jpg";
 
+let socket = null;
 function Received({ message }) {
   return (
     <div className="flex items-end gap-2">
@@ -40,6 +45,55 @@ function Sent({ message }) {
 }
 
 function Conversation() {
+  const [percentage, setPercentage] = useState(0);
+
+  const [message, setMessage] = useState("");
+
+  const handleMessage = () => {
+    if (socket) {
+      socket.emit("message", message, "2234abc");
+      setMessage("");
+    }
+  };
+
+  useEffect(() => {
+    console.log("initiating connection");
+    const Endpoint = "http://localhost:4040";
+    socket = socketio(Endpoint, {
+      autoConnect: false,
+      withCredentials: true,
+    });
+
+    let uploader = new SocketIOFileUpload(socket);
+    uploader.listenOnInput(document.getElementById("chat_media"));
+
+    uploader.addEventListener("progress", (e) =>
+      setPercentage(Math.floor((e.bytesLoaded / e.file.size) * 100))
+    );
+
+    socket.auth = { userId: "1234abc" };
+    socket.connect();
+
+    socket.on("message", (msg) => {
+      console.log(`server sent - ${msg}`);
+    });
+
+    socket.on("users", (list) => {
+      console.log(list);
+    });
+
+    socket.on("media", (data) => {
+      console.log(data);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("disconnected");
+    });
+
+    socket.on("connect_error", (err) => {
+      console.log(err.message);
+    });
+  }, []);
   return (
     <Wrapper>
       <div className="flex flex-col min-h-screen relative ">
@@ -71,7 +125,7 @@ function Conversation() {
                   to="/home"
                   className="text-sm px-4 p-2 block hover:bg-black text-white"
                 >
-                  Profile
+                  Home
                 </Link>
                 <Link
                   to="/chat"
@@ -99,6 +153,18 @@ function Conversation() {
             </span>
           </Tippy>
         </div>
+        <div className="h-16  w-16 mx-auto my-4">
+          <CircularProgressbar
+            className="text-pink-600 "
+            styles={buildStyles({
+              pathColor: "rgb(219,39,119,.9)",
+              textColor: "rgb(219,39,119,.9)",
+            })}
+            strokeWidth={10}
+            value={percentage}
+            text={`${percentage}%`}
+          />
+        </div>
         <div className="border-t-[1px] border-gray-200 p-3 flex-grow overflow-y-scroll  scrollbar-hide flex flex-col text-sm md:text-xs gap-2 ">
           <span className="text-xs text-white bg-gray-500 shadow mx-auto block w-max p-1 px-2 rounded">
             Today
@@ -125,10 +191,15 @@ function Conversation() {
           </label>
           <textarea
             rows={1}
+            onChange={(e) => setMessage(e.target.value)}
+            value={message}
             placeholder="Message"
-            className="w-full min-h-[36px] max-h-[120px] text-sm  ring-0 border-0 focus:ring-0 bg-white  rounded-md"
+            className="w-full min-h-[36px] max-h-[120px] text-sm  ring-0 border-0 focus:ring-0 bg-white  rounded"
           ></textarea>
-          <span className="h-9 w-9 flex-shrink-0 rounded-full bg-transparent   cursor-pointer  flex items-center justify-center">
+          <span
+            onClick={handleMessage}
+            className="h-9 w-9 flex-shrink-0 rounded-full bg-transparent   cursor-pointer  flex items-center justify-center"
+          >
             <RiSendPlaneFill size={22} className="text-white" />
           </span>
         </div>

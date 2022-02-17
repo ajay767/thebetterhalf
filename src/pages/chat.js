@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "@front/Header";
 import Wrapper from "@layout/Wrapper";
@@ -39,6 +39,7 @@ function Chat() {
   return (
     <Wrapper className="py-4 p-4">
       <Header />
+
       <div className="">
         <h2 className="text-base font-medium mb-4">Recent Messages</h2>
         <Chatcard
