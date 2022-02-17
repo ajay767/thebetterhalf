@@ -5,11 +5,14 @@ const chatSocket = require("./socket.io/chat");
 const cors = require("cors");
 const morgan = require("morgan");
 const AppError = require("./utils/AppError");
+var siofu = require("socketio-file-upload");
 const app = express();
 const globalErrorHandler = require("./utils/globalErrorHandler");
 const { authRouter, friendRouter } = require("./routes/index");
 
 const server = http.Server(app);
+
+app.use(siofu.router);
 
 const io = socketIo(server, {
   cors: {
@@ -18,7 +21,7 @@ const io = socketIo(server, {
     credentials: true,
   },
 });
-chatSocket(io);
+chatSocket(io, siofu);
 
 //parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));

@@ -18,6 +18,8 @@ const userSchema = new mongoose.Schema({
     trim: true,
     required: [true, "Please Provide a valid user name"],
   },
+  isPrivate: { type: Boolean, default: false },
+  profile: String,
   tags: [String],
   email: {
     type: String,
@@ -28,10 +30,6 @@ const userSchema = new mongoose.Schema({
   },
   mobile: {
     type: String,
-    index: {
-      unique: true,
-      partialFilterExpression: { mobile: { $type: "string" } },
-    },
   },
   password: {
     type: String,
@@ -41,8 +39,6 @@ const userSchema = new mongoose.Schema({
   passwordResetToken: String,
   passwordResetExpires: Date,
 });
-
-userSchema.index({ email: 1, mobile: 1 }, { unique: true });
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
