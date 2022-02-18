@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
     trim: true,
     required: [true, "Please Provide a valid user name"],
   },
+  status: {
+    type: String,
+    default: "Hey there, I am using better half.",
+  },
   isPrivate: { type: Boolean, default: false },
   profile: String,
   tags: [String],
@@ -54,17 +58,6 @@ userSchema.methods.correctPassword = async function (
 ) {
   return await bcryptjs.compare(typed_password, user_password);
 };
-
-// userSchema.methods.createPasswordResetToken = function() {
-//     const resetToken = crypto.randomBytes(32).toString("hex");
-//     this.passwordResetToken = crypto
-//      .createHash("sha256")
-//      .update(resetToken)
-//      .digest("hex");
-
-//      this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
-//      return resetToken;
-// }
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

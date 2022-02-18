@@ -8,10 +8,12 @@ exports.oneTapLogin = async (req, res, next) => {
     const token = req.body.token;
 
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
     const user = await User.findById(decoded.id);
 
-    if (!user) {
-      return new AppError("Please login again", 404);
+    if (user === null) {
+      console.log("error");
+      return next(new AppError("Please login again", 404));
     }
 
     const authToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
@@ -85,7 +87,47 @@ exports.login = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   try {
-    const { email, password, confirmPassword, status, profile } = req.body;
+    const user = await User.findById(req.user.id).select("+password");
+    if (
+      req.body.currentPassword &&
+      !(await user.correctPassword(req.body.currentPassword, user.password))
+    ) {
+      return next(new AppError("Your current password is wrong.", 401));
+    }
+    delete req.body.currentPassword;
+
+    Object.keys(req.body).map((curr) => {
+      user[curr] = req.body[curr];
+    });
+
+    await user.save();
+
+    res.status(200).json({
+      status: true,
+      message: "Profile updated successfully",
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.updatePassword = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id).select("+password");
+
+    if (
+      !(await user.correctPassword(req.body.currentPassword, user.password))
+    ) {
+      return next(new AppError("Your current password is wrong.", 401));
+    }
+
+    user.password = req.body.password;
+    user.passwordConfirm = req.body.passwordConfirm;
+    await user.save();
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    res.status(200).json({ status: true, message: "Password updated!", token });
   } catch (error) {
     next(error);
   }
@@ -98,7 +140,7 @@ exports.getProfile = async (req, res, next) => {
         .status(200)
         .json({ status: true, message: "success", data: req.user });
     } else {
-      return new AppError("Please login again", 404);
+      return next(new AppError("Please login again", 404));
     }
   } catch (error) {
     next(error);
