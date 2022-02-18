@@ -1,18 +1,26 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const friendSchema = new mongoose.Schema(
   {
-    senderId: {
+    requestedBy: {
       type: mongoose.Schema.ObjectId,
-      ref: "User",
+      ref: 'User',
+      index: true,
     },
-    receiverId: {
+    intentedTo: {
       type: mongoose.Schema.ObjectId,
-      ref: "Post",
+      ref: 'User',
+      index: true,
+    },
+    status: {
+      type: String,
+      enum: ['Accepted', 'Requested'],
+      default: 'Requested',
     },
   },
   { timestamps: true }
 );
+friendSchema.index({ requestedBy: 1, intentedTo: 1 }, { unique: true });
 
-const Friend = mongoose.model("Friend", friendSchema);
+const Friend = mongoose.model('Friend', friendSchema);
 module.exports = Friend;
