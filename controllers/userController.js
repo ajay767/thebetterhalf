@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const AppError = require("../utils/AppError");
 const { promisify } = require("util");
+const fileUploader = require("./../utils/fileUploader");
 const jwt = require("jsonwebtoken");
 
 exports.oneTapLogin = async (req, res, next) => {
@@ -142,6 +143,22 @@ exports.getProfile = async (req, res, next) => {
     } else {
       return next(new AppError("Please login again", 404));
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.uploadProfile = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const data = await fileUploader(req);
+    console.log(data);
+    const locationUrl = data.Location;
+    user.profile = locationUrl;
+    await user.save();
+    res
+      .status(200)
+      .json({ status: true, message: "Profile image updated", data: user });
   } catch (error) {
     next(error);
   }
