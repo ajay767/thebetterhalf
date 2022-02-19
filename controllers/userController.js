@@ -59,9 +59,11 @@ exports.signup = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const { password, email_mobile_username } = req.body;
-    if (!email_mobile_username) {
+
+    if (!email_mobile_username || !password) {
       return next(new AppError("Invalid credientials", 404));
     }
+
     const user = await User.findOne({
       $or: [
         { email: email_mobile_username },
@@ -73,6 +75,18 @@ exports.login = async (req, res, next) => {
     if (!user || !(await user.correctPassword(password, user.password))) {
       return next(new AppError("Invalid Credientials", 400));
     }
+
+    if (process.env.NODE_ENV === "development") {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      user.password = undefined;
+      return res.status(200).json({
+        status: true,
+        user,
+        token,
+        message: "Logged in successfully",
+      });
+    }
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     user.password = undefined;
     res.status(200).json({
@@ -151,10 +165,7 @@ exports.getProfile = async (req, res, next) => {
 exports.uploadProfile = async (req, res, next) => {
   try {
     const user = req.user;
-    const data = await fileUploader(req);
-    console.log(data);
-    const locationUrl = data.Location;
-    user.profile = locationUrl;
+    user.profile = req.body.url;
     await user.save();
     res
       .status(200)

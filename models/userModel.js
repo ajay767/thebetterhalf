@@ -23,7 +23,10 @@ const userSchema = new mongoose.Schema({
     default: "Hey there, I am using better half.",
   },
   isPrivate: { type: Boolean, default: false },
-  profile: String,
+  profile: {
+    type: String,
+    default: "https://thebetterhalf.s3.amazonaws.com/userAvatar/user.png",
+  },
   tags: [String],
   email: {
     type: String,

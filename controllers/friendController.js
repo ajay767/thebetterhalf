@@ -1,12 +1,12 @@
-const Friend = require('./../models/friendModel');
-const AppError = require('./../utils/AppError');
+const Friend = require("./../models/friendModel");
+const AppError = require("./../utils/AppError");
 
 exports.sendRequest = async (req, res, next) => {
   try {
     const user = req.user;
     const { receiver } = req.body;
     if (!receiver) {
-      return next(new AppError('Error while sending friend request', 404));
+      return next(new AppError("Error while sending friend request", 404));
     }
     const existRequest = await Friend.findOne({
       $or: [
@@ -22,7 +22,7 @@ exports.sendRequest = async (req, res, next) => {
     });
     if (existRequest) {
       console.log(existRequest);
-      return next(new AppError('Error while sending friend request', 404));
+      return next(new AppError("Error while sending friend request", 404));
     }
     // mongo error -> req->user_id and int->coming_id
     const friendRequest = await Friend.create({
@@ -33,12 +33,13 @@ exports.sendRequest = async (req, res, next) => {
     res.status(201).json({
       data: friendRequest,
       status: true,
-      message: 'Request Sent',
+      message: "Request Sent",
     });
   } catch (error) {
     next(error);
   }
 };
+
 exports.acceptRequest = async (req, res, next) => {
   try {
     const intentedTo = req.user._id;
@@ -49,7 +50,7 @@ exports.acceptRequest = async (req, res, next) => {
         intentedTo,
       },
       {
-        status: 'Accepted',
+        status: "Accepted",
       },
       {
         new: true,
@@ -57,17 +58,18 @@ exports.acceptRequest = async (req, res, next) => {
       }
     );
     if (!friendRequest) {
-      return next(new AppError('No such Friend Request exist', 404));
+      return next(new AppError("No such Friend Request exist", 404));
     }
     res.status(200).json({
       data: friendRequest,
       status: true,
-      message: 'Request Accepted',
+      message: "Request Accepted",
     });
   } catch (error) {
     next(error);
   }
 };
+
 exports.deleteRequest = async (req, res, next) => {
   try {
     const intentedTo = req.user._id;
@@ -78,7 +80,7 @@ exports.deleteRequest = async (req, res, next) => {
     });
     res.status(200).json({
       status: true,
-      message: 'Requested Deleted Successfully',
+      message: "Requested Deleted Successfully",
     });
   } catch (error) {
     next(error);
@@ -92,15 +94,14 @@ exports.getAllFriends = async (req, res, next) => {
       $or: [
         {
           requestedBy: user,
-          status: 'Accepted',
+          status: "Accepted",
         },
         {
           intentedTo: user,
-          status: 'Accepted',
+          status: "Accepted",
         },
       ],
-    }).populate('requestedBy intentedTo');
-    // console.log(allFriends);
+    }).populate("requestedBy intentedTo");
     const Friends = allFriends.map((friend) => {
       const { intentedTo, requestedBy } = friend;
       if (requestedBy._id.equals(user._id)) {
@@ -113,22 +114,23 @@ exports.getAllFriends = async (req, res, next) => {
       };
     });
     res.json({
-      Friends,
-      status: "Here's Your all Friends",
+      data: Friends,
+      status: true,
+      message: "Here's Your all Friends",
     });
   } catch (err) {
     next(err);
   }
 };
+
 exports.getAllPendingFriends = async (req, res, next) => {
   try {
     const user = req.user._id;
-    console.log(user);
     const allFriends = await Friend.find({
       intentedTo: user,
-      status: 'Requested',
-    }).populate('requestedBy intentedTo');
-    console.log(allFriends);
+      status: "Requested",
+    }).populate("requestedBy intentedTo");
+
     const Friends = allFriends.map((friend) => {
       const { intentedTo, requestedBy } = friend;
       if (requestedBy._id.equals(user._id)) {
@@ -141,8 +143,9 @@ exports.getAllPendingFriends = async (req, res, next) => {
       };
     });
     res.json({
-      Friends,
-      status: "Here's Your all Friends",
+      data: Friends,
+      status: true,
+      message: "Here's Your all Friends",
     });
   } catch (err) {
     next(err);
@@ -156,7 +159,7 @@ exports.getAllRequests = async (req, res, next) => {
     res.status(200).json({
       data: requests,
       status: true,
-      message: 'Success',
+      message: "Success",
     });
   } catch (error) {
     next(error);

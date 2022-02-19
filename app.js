@@ -8,7 +8,7 @@ const AppError = require("./utils/AppError");
 var siofu = require("socketio-file-upload");
 const app = express();
 const globalErrorHandler = require("./utils/globalErrorHandler");
-const { authRouter, friendRouter } = require("./routes/index");
+const { authRouter, friendRouter, s3Router } = require("./routes/index");
 
 const server = http.Server(app);
 
@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // allow other request to get access
-var whitelist = [process.env.CLIENT, "http://localhost:3000"];
+var whitelist = [process.env.CLIENT, undefined];
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
@@ -42,7 +42,7 @@ var corsOptions = {
     }
   },
 };
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 /*
   Routes without socket instance
@@ -50,6 +50,7 @@ var corsOptions = {
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/friend", friendRouter);
+app.use("/api/v1/aws", s3Router);
 
 /*
   Routes with socket instance

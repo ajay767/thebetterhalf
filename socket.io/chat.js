@@ -22,7 +22,7 @@ class Connection {
   constructor({ io, socket, siofu }) {
     this.io = io;
     this.socket = socket;
-    console.log(socket);
+
     socket.join(socket.userId);
     socket.on("message", (...args) => this.handleMessage(...args));
     socket.on("disconnect", () => console.log("user disconnected"));
