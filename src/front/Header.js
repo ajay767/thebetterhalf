@@ -7,7 +7,7 @@ import Tippy from "@tippyjs/react";
 
 function Header() {
   const history = useHistory();
-  const { signOut } = useAuth();
+  const { signOut, ...user } = useAuth();
   return (
     <div className="grid grid-cols-3 sticky bg-white z-[1000] top-0 py-2 ">
       <div className="  mt-2">
@@ -74,7 +74,7 @@ function Header() {
         >
           <img
             alt="user profile "
-            src={profile}
+            src={user.profile}
             className="h-10 w-10 rounded-full object-cover ml-auto"
           />
         </Tippy>

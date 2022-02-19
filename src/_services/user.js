@@ -11,6 +11,21 @@ export const login = async (data) => {
   return res;
 };
 
+export const updateProfile = async (data) => {
+  const res = await api.put("/auth/profile", data, getAuthHeader());
+  return res;
+};
+
+export const updateProfilePicture = async (data) => {
+  const res = await api.put("/auth/upload-profile", data, getAuthHeader());
+  return res;
+};
+
+export const updatePassword = async (data) => {
+  const res = await api.put("/auth/update-password", data, getAuthHeader());
+  return res;
+};
+
 export const getProfile = async (data) => {
   const res = await api.get("/auth/profile", getAuthHeader());
   return res;

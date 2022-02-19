@@ -8,7 +8,6 @@ import Tippy from "@tippyjs/react";
 import Wrapper from "@layout/Wrapper";
 import SocketIOFileUpload from "socketio-file-upload";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
 
 import user1 from "@assets/images/p1.jpg";
 import user2 from "@assets/images/p4.jpg";
@@ -153,18 +152,7 @@ function Conversation() {
             </span>
           </Tippy>
         </div>
-        <div className="h-16  w-16 mx-auto my-4">
-          <CircularProgressbar
-            className="text-pink-600 "
-            styles={buildStyles({
-              pathColor: "rgb(219,39,119,.9)",
-              textColor: "rgb(219,39,119,.9)",
-            })}
-            strokeWidth={10}
-            value={percentage}
-            text={`${percentage}%`}
-          />
-        </div>
+
         <div className="border-t-[1px] border-gray-200 p-3 flex-grow overflow-y-scroll  scrollbar-hide flex flex-col text-sm md:text-xs gap-2 ">
           <span className="text-xs text-white bg-gray-500 shadow mx-auto block w-max p-1 px-2 rounded">
             Today

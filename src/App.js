@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Router from "@router";
 import { Toaster } from "react-hot-toast";
 import "tippy.js/dist/tippy.css";
+import "react-circular-progressbar/dist/styles.css";
 
 function App() {
   useEffect(() => {

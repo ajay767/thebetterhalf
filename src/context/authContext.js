@@ -1,5 +1,7 @@
 import React, { useContext, useReducer } from "react";
 import { setToken, getToken, deleteToken } from "@constant";
+import profile from "@assets/avtar/user.png";
+
 import { getProfile } from "@services/user";
 import toast from "react-hot-toast";
 
@@ -27,14 +29,22 @@ const initialState = {
 const reducer = (state, action) => {
   switch (action.type) {
     case SIGN_IN: {
-      return { ...state, ...action.payload };
+      return {
+        ...state,
+        ...action.payload,
+        profile: action.payload.profile || profile,
+      };
     }
     case SIGN_OUT: {
       deleteToken();
       return initialState;
     }
     case UPDATE: {
-      return { ...state, ...action.payload };
+      return {
+        ...state,
+        ...action.payload,
+        profile: action.payload.profile || profile,
+      };
     }
     default: {
       return { ...state };

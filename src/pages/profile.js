@@ -7,6 +7,8 @@ import user2 from "@assets/images/p2.jpg";
 import user3 from "@assets/images/p3.jpg";
 import user4 from "@assets/images/p4.jpg";
 import user5 from "@assets/images/p5.jpg";
+import { useAuth } from "@context/authContext";
+
 function Profilecard({ profile, name, activeStatus }) {
   return (
     <div className="rounded ring-1 ring-gray-400 p-2 text-gray-800 w-28 flex flex-col gap-2 flex-shrink-0  ">
@@ -26,7 +28,8 @@ function Profilecard({ profile, name, activeStatus }) {
   );
 }
 
-function profile() {
+function Profile() {
+  const user = useAuth();
   return (
     <Wrapper className="p-4">
       <Header />
@@ -34,13 +37,15 @@ function profile() {
       <div>
         <div className="h-28  w-28  rounded-full p-1 ring-2 ring-pink-600 mx-auto my-4">
           <img
-            src={user2}
+            src={user.profile}
             alt="user"
             className=" h-full w-full rounded-full object-cover "
           />
         </div>
-        <p className="text-lg font-medium text-center">Anamika Singh</p>
-        <p className="text-sm font-medium  text-center">Hustle 🔥</p>
+        <p className="text-lg font-medium text-center">
+          {user.firstName + " " + user.lastName}
+        </p>
+        <p className="text-sm font-medium  text-center">{user.status}</p>
         <div className="flex gap-2 w-max mx-auto my-2">
           <span className="hover:bg-pink-600 hover:text-white cursor-pointer   text-pink-600 text-xs p-2 px-4 rounded-full ring-1 ring-pink-600 block">
             Adventure
@@ -63,4 +68,4 @@ function profile() {
   );
 }
 
-export default profile;
+export default Profile;
