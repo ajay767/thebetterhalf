@@ -20,4 +20,6 @@ router.put(
   userController.uploadProfile
 );
 
+router.get("/user/:id", authController.protect, userController.getUser);
+
 module.exports = router;

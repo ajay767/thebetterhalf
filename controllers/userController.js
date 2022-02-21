@@ -162,6 +162,25 @@ exports.getProfile = async (req, res, next) => {
   }
 };
 
+exports.getUser = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return next(new AppError("Please login again", 404));
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return next("This account has been deleted!", 404);
+    }
+
+    return res
+      .status(200)
+      .json({ status: true, message: "success", data: user });
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.uploadProfile = async (req, res, next) => {
   try {
     const user = req.user;
