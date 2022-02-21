@@ -22,7 +22,7 @@ const initialState = {
   lastName: "",
   username: "",
   mobile: "",
-  profile: "",
+  profile: profile,
   _id: "",
 };
 

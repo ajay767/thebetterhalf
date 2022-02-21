@@ -16,7 +16,7 @@ import user3 from "@assets/images/p5.jpg";
 let socket = null;
 function Received({ message }) {
   return (
-    <div className="flex items-end gap-2">
+    <div className="flex items-end mt-2 space-x-2">
       <img
         src={user1}
         alt="Anamika"
@@ -34,7 +34,7 @@ function Received({ message }) {
 
 function Sent({ message }) {
   return (
-    <div className="p-2 bg-pink-600 text-sm rounded-l-lg   min-w-[90px]  rounded-tr-lg     rounded-sm max-w-[75%] w-max  ml-auto text-white ">
+    <div className="p-2 bg-pink-600 mt-2 text-sm rounded-l-lg   min-w-[90px]  rounded-tr-lg     rounded-sm max-w-[75%] w-max  ml-auto text-white ">
       {message}
       <span className="text-[12px]  block text-left text-gray-200">
         3:20 PM
@@ -96,8 +96,8 @@ function Conversation() {
   return (
     <Wrapper>
       <div className="flex flex-col min-h-screen relative ">
-        <div className="flex items-center gap-2 p-4 bg-white py-2 justify-between flex-shrink-0 sticky top-0">
-          <div className="flex items-center gap-2 ">
+        <div className="flex items-center space-x-2 p-4 bg-white py-2 justify-between flex-shrink-0 sticky top-0">
+          <div className="flex items-center space-x-2 ">
             <img
               src={user1}
               alt="Anamika"
@@ -105,7 +105,7 @@ function Conversation() {
             />
             <div className="text-xs">
               <p className="font-medium  ">Anamika Yadav</p>
-              <p className="flex items-center gap-2">
+              <p className="flex items-center space-x-2">
                 Active Now{" "}
                 <span className="h-2 w-2 bg-green-600 rounded-full block"></span>
               </p>
@@ -153,8 +153,8 @@ function Conversation() {
           </Tippy>
         </div>
 
-        <div className="border-t-[1px] border-gray-200 p-3 flex-grow overflow-y-scroll  scrollbar-hide flex flex-col text-sm md:text-xs gap-2 ">
-          <span className="text-xs text-white bg-gray-500 shadow mx-auto block w-max p-1 px-2 rounded">
+        <div className="border-t-[1px] border-gray-200 p-3 flex-grow overflow-y-scroll  scrollbar-hide flex flex-col text-sm md:text-xs  ">
+          <span className="text-xs mt-2 text-white bg-gray-500 shadow mx-auto block w-max p-1 px-2 rounded">
             Today
           </span>
           <Sent message={"Hello"} />
@@ -165,7 +165,7 @@ function Conversation() {
             distinctio officiis sapiente cumque quidem aut fugit!"
           />
         </div>
-        <div className="bg-slate-400 p-2 flex-shrink-0 flex items-end gap-2 sticky bottom-0  ">
+        <div className="bg-slate-400 p-2 flex-shrink-0 flex items-end space-x-2 sticky bottom-0  ">
           <input
             className="hidden "
             type="file"

@@ -8,7 +8,7 @@ import Tippy from "@tippyjs/react";
 
 function NotificationCard({ poster, title, description }) {
   return (
-    <div className="flex gap-2 items-start mb-2">
+    <div className="flex space-x-2 items-start mb-2">
       {poster}
       <div className="text-sm overflow-hidden  ">
         <p className="line-clamp-2  ">{description}</p>

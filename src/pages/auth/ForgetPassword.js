@@ -8,7 +8,7 @@ function Step1({ onSubmit }) {
         e.preventDefault();
         onSubmit();
       }}
-      className="flex flex-col gap-2 mt-8"
+      className="flex flex-col space-x-2 mt-8"
     >
       <div className="flex flex-col ">
         <label className="text-sm mb-1">Email</label>

@@ -11,7 +11,7 @@ import { useAuth } from "@context/authContext";
 
 function Profilecard({ profile, name, activeStatus }) {
   return (
-    <div className="rounded ring-1 ring-gray-400 p-2 text-gray-800 w-28 flex flex-col gap-2 flex-shrink-0  ">
+    <div className="rounded ring-1 ring-gray-400 p-2 text-gray-800 w-28 flex flex-col space-x-2 flex-shrink-0  ">
       <img
         alt="anjali"
         src={profile}
@@ -46,7 +46,7 @@ function Profile() {
           {user.firstName + " " + user.lastName}
         </p>
         <p className="text-sm font-medium  text-center">{user.status}</p>
-        <div className="flex gap-2 w-max mx-auto my-2">
+        <div className="flex space-x-2 w-max mx-auto my-2">
           <span className="hover:bg-pink-600 hover:text-white cursor-pointer   text-pink-600 text-xs p-2 px-4 rounded-full ring-1 ring-pink-600 block">
             Adventure
           </span>

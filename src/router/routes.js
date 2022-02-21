@@ -3,12 +3,14 @@ import Login from "@pages/auth/Login";
 import Signup from "@pages/auth/Signup";
 import ForgetPassword from "@pages/auth/ForgetPassword";
 import Home from "@pages/home";
-import Profile from "@pages/profile";
+import Profile from "@pages/auth/profile";
 import Chat from "@pages/chat";
+import User from "@pages/user";
 import Conversation from "@pages/Conversation";
 import Notification from "@pages/Notification";
 import Friends from "@pages/friends";
 import Setting from "@pages/setting";
+
 const routes = [
   { path: "/launch", component: Landing, auth: false, exact: true },
   { path: "/login", component: Login, auth: false, exact: true },
@@ -26,6 +28,7 @@ const routes = [
   { path: "/setting", component: Setting, auth: true, exact: true },
   { path: "/chat", component: Chat, auth: true, exact: true },
   { path: "/chat/:id", component: Conversation, auth: true, exact: true },
+  { path: "/user/:id", component: User, auth: true, exact: true },
 ];
 
 export default routes;

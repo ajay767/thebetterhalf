@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Switch, Route, NavLink } from "react-router-dom";
+import { Switch, Route, NavLink, Link } from "react-router-dom";
 import Wrapper from "@layout/Wrapper";
 import Header from "@front/Header";
 import user2 from "@assets/images/p2.jpg";
@@ -22,40 +22,42 @@ export function FriendListCard({
   handleAcceptRequest,
 }) {
   return (
-    <div className="mb-2 flex gap-2 items-stretch">
-      <img
-        className="w-12 h-12  rounded-md  object-cover"
-        src={user.profile}
-        alt="user"
-      />
-      <div className="text-sm ">
-        <h4 className="font-medium flex items-center  ">
-          {user.username}{" "}
-          {verified && (
-            <span className="text-pink-600 ml-2 ">
-              <IoCheckmarkDoneCircle size={24} />
-            </span>
-          )}
-        </h4>
-        <p>{user.status}</p>
-      </div>
-      {request && (
-        <div className="ml-auto flex gap-2 items-center r">
-          <p
-            onClick={() => handleAcceptRequest(user._id)}
-            className="p-2 hover:bg-pink-600 hover:text-white cursor-pointer  ring-1 ring-pink-600 text-xs rounded-full"
-          >
-            <GiCheckMark size={16} />
-          </p>
-          <p
-            onClick={() => handleDeleteRequest(user._id)}
-            className="p-2 hover:bg-pink-600 hover:text-white cursor-pointer  ring-1 ring-pink-600 text-xs rounded-full"
-          >
-            <BsPlusLg size={16} className="transform rotate-45 " />
-          </p>
+    <Link to={`/user/${user._id}`}>
+      <div className="mb-2 flex space-x-2 items-stretch">
+        <img
+          className="w-12 h-12  rounded-md  object-cover"
+          src={user.profile}
+          alt="user"
+        />
+        <div className="text-sm ">
+          <h4 className="font-medium flex items-center  ">
+            {user.username}{" "}
+            {verified && (
+              <span className="text-pink-600 ml-2 ">
+                <IoCheckmarkDoneCircle size={24} />
+              </span>
+            )}
+          </h4>
+          <p>{user.status}</p>
         </div>
-      )}
-    </div>
+        {request && (
+          <div className="ml-auto flex space-x-2 items-center r">
+            <p
+              onClick={() => handleAcceptRequest(user._id)}
+              className="p-2 hover:bg-pink-600 hover:text-white cursor-pointer  ring-1 ring-pink-600 text-xs rounded-full"
+            >
+              <GiCheckMark size={16} />
+            </p>
+            <p
+              onClick={() => handleDeleteRequest(user._id)}
+              className="p-2 hover:bg-pink-600 hover:text-white cursor-pointer  ring-1 ring-pink-600 text-xs rounded-full"
+            >
+              <BsPlusLg size={16} className="transform rotate-45 " />
+            </p>
+          </div>
+        )}
+      </div>
+    </Link>
   );
 }
 

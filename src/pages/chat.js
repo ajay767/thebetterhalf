@@ -12,7 +12,7 @@ import user5 from "@assets/images/p5.jpg";
 function Chatcard({ profile, name, activeStatus }) {
   return (
     <Link to="/chat/TZ5346">
-      <div className="flex items-center gap-2 mb-3 cursor-pointer">
+      <div className="flex items-center space-x-2  mb-3 cursor-pointer">
         <img
           src={profile}
           alt="Anamika"

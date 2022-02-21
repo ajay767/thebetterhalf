@@ -47,10 +47,18 @@ function LoginUserCard({
   handleDelete,
   createdAt,
 }) {
+  const [processing, setProcessing] = useState(false);
   return (
-    <div className="flex p-2 px-4 bg-white shadow-md ring-slate-100 ring-1 rounded-md w-full  items-center justify-between space-x-2 my-2  ">
+    <div
+      className={` flex p-2 px-4 bg-white shadow-md ring-slate-100 ring-1 rounded-md w-full  items-center justify-between space-x-2 my-2 ${
+        processing ? " bg-gray-400 bg-opacity-40 " : ""
+      }`}
+    >
       <div
-        onClick={onClick}
+        onClick={() => {
+          setProcessing((e) => !e);
+          onClick();
+        }}
         className="flex items-center cursor-pointer space-x-2"
       >
         <img
@@ -156,7 +164,7 @@ function Login() {
             onSubmit={handleLogin}
           >
             {(e) => (
-              <Form className="flex flex-col gap-2 mt-8">
+              <Form className="flex flex-col space-x-2 mt-8">
                 <InputField name="email_mobile_username" label="Email" />
                 <InputField name="password" type="Password" label="Password" />
                 <p className="text-right text-sm text-gray-500">

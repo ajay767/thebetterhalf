@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
 import { FiChevronDown } from "react-icons/fi";
+import { BsFillCameraFill } from "react-icons/bs";
+import { MdAdd } from "react-icons/md";
 import Header from "@front/Header";
 import Wrapper from "@layout/Wrapper";
 import api from "@constant/api";
@@ -174,14 +176,20 @@ function Setting() {
         />
         <label htmlFor="profile">
           <div className="relative cursor-pointer ">
-            <div className="h-[120px]  w-[120px]    rounded-full  mx-auto my-4">
+            <div className="h-[120px]  w-[120px]  relative  rounded-full  mx-auto my-4">
               <img
                 ref={profileRef}
                 src={userData.profile}
                 alt="user"
                 className=" h-full w-full rounded-full object-cover "
               />
+              {!uploading && (
+                <span className="flex items-center justify-center bg-white absolute right-2 bottom-2 h-8 w-8 ring-2 shadow-md rounded-full ">
+                  <BsFillCameraFill />
+                </span>
+              )}
             </div>
+
             {uploading && (
               <div className="h-[120px]  w-[120px] text-white font-medium flex items-center justify-center absolute top-0 right-0 left-0 bg-gray-600 bg-opacity-40  rounded-full  mx-auto">
                 {`${progress} `}
@@ -210,12 +218,15 @@ function Setting() {
         <p className="text-sm font-medium  text-center my-4 w-8/12 mx-auto ">
           {userData.status}
         </p>
-        <div className="flex gap-2 w-max mx-auto my-2">
+        <div className="flex space-x-2 w-max mx-auto my-2">
           <span className="hover:bg-pink-600 hover:text-white cursor-pointer   text-pink-600 text-xs p-2 px-4 rounded-full ring-1 ring-pink-600 block">
             Adventure
           </span>
           <span className="hover:bg-pink-600 hover:text-white cursor-pointer   text-pink-600 text-xs p-2 px-4 rounded-full ring-1 ring-pink-600 block">
             Riding
+          </span>
+          <span className="hover:bg-pink-600 hover:text-white cursor-pointer  flex items-center text-pink-600 text-xs p-2 rounded-full ring-1 ring-pink-600 ">
+            <MdAdd size={18} />
           </span>
         </div>
       </div>

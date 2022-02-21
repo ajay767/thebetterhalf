@@ -14,3 +14,12 @@
   font-family: "Billabong";
   src: url("./../assets/fonts/billabong.ttf") format("truetype");
 }
+
+.mce-content-body {
+  min-height: 75px;
+  @apply text-gray-600 text-sm ring-1 ring-gray-400 rounded outline-none p-4;
+}
+
+.mce-content-body h4 {
+  @apply font-bold;
+}
