@@ -1,9 +1,13 @@
-const authRouter = require("./authRoutes.js");
-const friendRouter = require("./friendRoute");
-const s3Router = require("./s3Routes");
+const authRouter = require('./authRoutes.js');
+const friendRouter = require('./friendRoute');
+const s3Router = require('./s3Routes');
+const postRouter = require('./postRoutes');
+const commentRouter = require('./commentRoutes');
 
 module.exports = {
   authRouter,
   friendRouter,
   s3Router,
+  postRouter,
+  commentRouter,
 };
