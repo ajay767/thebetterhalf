@@ -7,5 +7,6 @@ const router = express.Router();
 router
   .route('/create')
   .post(authController.protect, commentController.createComment);
+router.route('/getcomments/:id').get(commentController.getComment);
 
 module.exports = router;
