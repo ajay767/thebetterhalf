@@ -42,7 +42,7 @@ exports.getpostsofusers = async (req, res, next) => {
     if (!userId || userId == '0') userId = req.user._id;
     const post = await Post.find({
       userId,
-    }).populate('comments');
+    }).populate([{ path: 'comments' }, { path: 'likes', select: '_id' }]);
     res.json({
       status: 'Success',
       posts: post,
