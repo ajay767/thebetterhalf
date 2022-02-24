@@ -20,13 +20,29 @@ exports.createPost = async (req, res, next) => {
   }
 };
 
+exports.getPost = async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const post = await Post.findById(postId);
+    if (!post) {
+      return next(new AppError('Post is unavailble', 400));
+    }
+    req.json({
+      status: 'Success',
+      post,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.getpostsofusers = async (req, res, next) => {
   try {
     let userId = req.params.id;
     if (!userId || userId == '0') userId = req.user._id;
     const post = await Post.find({
       userId,
-    }).populate('comments');
+    }).populate([{ path: 'comments' }, { path: 'likes', select: '_id' }]);
     res.json({
       status: 'Success',
       posts: post,

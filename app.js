@@ -14,6 +14,7 @@ const {
   s3Router,
   postRouter,
   commentRouter,
+  likeRouter,
 } = require('./routes/index');
 
 const server = http.Server(app);
@@ -59,6 +60,8 @@ app.use('/api/v1/friend', friendRouter);
 app.use('/api/v1/aws', s3Router);
 app.use('/api/v1/post', postRouter);
 app.use('/api/v1/comment', commentRouter);
+app.use('/api/v1/comment', commentRouter);
+app.use('/api/v1/like', likeRouter);
 
 /*
   Routes with socket instance
