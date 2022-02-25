@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.ObjectId,
-      ref: 'User',
+      ref: "User",
     },
     poster: {
       type: [String],
@@ -20,16 +20,18 @@ const postSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-postSchema.virtual('comments', {
-  ref: 'Comment',
-  localField: '_id',
-  foreignField: 'postId',
-});
-postSchema.virtual('likes', {
-  ref: 'Like',
-  localField: '_id',
-  foreignField: 'postId',
+
+postSchema.virtual("comments", {
+  ref: "Comment",
+  localField: "_id",
+  foreignField: "postId",
 });
 
-const Post = mongoose.model('Post', postSchema);
+postSchema.virtual("likes", {
+  ref: "Like",
+  localField: "_id",
+  foreignField: "postId",
+});
+
+const Post = mongoose.model("Post", postSchema);
 module.exports = Post;

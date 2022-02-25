@@ -1,6 +1,6 @@
-const Comment = require('../models/commentModel');
-const AppError = require('../utils/AppError');
-const APIFeatures = require('../utils/APIFeatures');
+const Comment = require("../models/commentModel");
+const AppError = require("../utils/AppError");
+const APIFeatures = require("../utils/APIFeatures");
 
 exports.createComment = async (req, res, next) => {
   try {
@@ -8,7 +8,7 @@ exports.createComment = async (req, res, next) => {
     const userId = req.user._id;
     const comment = await Comment.create({ text, userId, postId });
     res.json({
-      ststus: 'Success',
+      status: true,
       comment,
     });
   } catch (err) {
@@ -21,14 +21,14 @@ exports.getComment = async (req, res, next) => {
   try {
     const query = Comment.find({
       postId: req.params.id,
-    });
+    }).populate("userId");
     const features = new APIFeatures(query, req.query)
       .filter()
       .sort()
       .paginate();
     const comments = await features.query;
     res.json({
-      status: 'Success',
+      status: true,
       comments,
     });
   } catch (err) {

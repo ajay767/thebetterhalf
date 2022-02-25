@@ -1,5 +1,5 @@
-const Post = require('../models/postModel');
-const AppError = require('../utils/AppError');
+const Post = require("../models/postModel");
+const AppError = require("../utils/AppError");
 
 exports.createPost = async (req, res, next) => {
   try {
@@ -11,8 +11,9 @@ exports.createPost = async (req, res, next) => {
       poster,
     });
     res.json({
-      status: 'Success',
+      status: true,
       post,
+      message: "Post created successfully!",
     });
   } catch (err) {
     console.log(err);
@@ -25,10 +26,10 @@ exports.getPost = async (req, res, next) => {
     const { postId } = req.params;
     const post = await Post.findById(postId);
     if (!post) {
-      return next(new AppError('Post is unavailble', 400));
+      return next(new AppError("Post is unavailble", 400));
     }
     req.json({
-      status: 'Success',
+      status: true,
       post,
     });
   } catch (err) {
@@ -39,12 +40,12 @@ exports.getPost = async (req, res, next) => {
 exports.getpostsofusers = async (req, res, next) => {
   try {
     let userId = req.params.id;
-    if (!userId || userId == '0') userId = req.user._id;
+    if (!userId || userId == "0") userId = req.user._id;
     const post = await Post.find({
       userId,
-    }).populate([{ path: 'comments' }, { path: 'likes', select: '_id' }]);
+    }).populate([{ path: "comments" }, { path: "likes", select: "_id" }]);
     res.json({
-      status: 'Success',
+      status: true,
       posts: post,
     });
   } catch (err) {
@@ -58,11 +59,11 @@ exports.deletePost = async (req, res, next) => {
     const postId = req.params.id;
     const post = await Post.findById(postId);
     if (post.userId != req.user._id) {
-      return next(new AppError('Post can be deleted by used who created it!'));
+      return next(new AppError("Post can be deleted by used who created it!"));
     }
     await Post.findByIdAndDelete(postId);
     res.json({
-      status: 'Successfully Delete',
+      status: "Successfully Delete",
     });
   } catch (err) {
     console.log(err);
