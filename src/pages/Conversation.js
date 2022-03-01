@@ -149,6 +149,13 @@ function Conversation() {
         console.log(err.message);
       });
     }
+
+    return function () {
+      if (socket) {
+        socket.off();
+        socket.disconnect();
+      }
+    };
   }, [me]);
   return (
     <Wrapper>
