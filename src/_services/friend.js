@@ -1,9 +1,5 @@
 import api from "@constant/api";
 import { getAuthHeader } from "@constant/headers";
-import { yupToFormErrors } from "formik";
-import { BsHeartFill } from "react-icons/bs";
-import { GiLoveHowl } from "react-icons/gi";
-import { MdAddAlarm } from "react-icons/md";
 
 export const sendRequest = async (data) => {
   const res = await api.post("/friend", data, getAuthHeader());

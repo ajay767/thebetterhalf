@@ -1,35 +1,50 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import Header from "@front/Header";
 import Wrapper from "@layout/Wrapper";
-import user1 from "@assets/images/p1.jpg";
-import user2 from "@assets/images/p2.jpg";
-import user3 from "@assets/images/p3.jpg";
-import user4 from "@assets/images/p4.jpg";
-import user5 from "@assets/images/p5.jpg";
+import { IoImageSharp } from "react-icons/io5";
+
+import { feed } from "@services";
+import PostDetails from "@components/PostDetails";
+
 import { useAuth } from "@context/authContext";
 
-function Profilecard({ profile, name, activeStatus }) {
+function PostFeed({ post }) {
+  const [postModal, setPostModal] = useState(false);
+  const toggle = () => {
+    setPostModal((e) => !e);
+  };
   return (
-    <div className="rounded ring-1 ring-gray-400 p-2 text-gray-800 w-28 flex flex-col space-x-2 flex-shrink-0  ">
-      <img
-        alt="anjali"
-        src={profile}
-        className="h-14 w-14 rounded-full object-cover mx-auto"
-      />
-      <div>
-        <p className="text-sm text-center font-medium mb-1">Anjali singh</p>
-        <p className="text-xs text-center text-gray-800">Student</p>
+    <>
+      {postModal && <PostDetails post={post} onClose={toggle} />}
+      <div
+        onClick={toggle}
+        className="w-full aspect-square  rounded-md overflow-hidden cursor-pointer"
+      >
+        <img
+          src={post?.poster[0]}
+          alt={post.caption}
+          className="h-full w-full object-cover"
+        />
       </div>
-      <button className="bg-pink-600 text-white text-xs p-2 px-4  mx-auto block rounded-full ">
-        Follow
-      </button>
-    </div>
+    </>
   );
 }
 
 function Profile() {
   const user = useAuth();
+  const [feeds, setFeeds] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const res = await feed.getMyPost();
+      console.log(res.data);
+      if (res.data.status) {
+        setFeeds(res.data.posts);
+      }
+    };
+
+    fetchPosts();
+  }, []);
   return (
     <Wrapper className="p-4">
       <Header />
@@ -55,14 +70,16 @@ function Profile() {
           </span>
         </div>
       </div>
-      <div className="scrollbar-hide  flex gap-4 overflow-scroll py-4 px-2">
-        <Profilecard profile={user1} />
-        <Profilecard profile={user4} />
-        <Profilecard profile={user5} />
-        <Profilecard profile={user3} />
-        <Profilecard profile={user4} />
-        <Profilecard profile={user2} />
-        <Profilecard profile={user3} />
+      {!Boolean(feeds.length) && (
+        <>
+          <IoImageSharp size={56} className="mt-8 mx-auto" />
+          <p className="text-sm text-center">No Post Yet</p>
+        </>
+      )}
+      <div className="my-4 grid grid-cols-3 gap-2 ">
+        {feeds.map((curr) => (
+          <PostFeed key={curr._id} post={curr} />
+        ))}
       </div>
     </Wrapper>
   );

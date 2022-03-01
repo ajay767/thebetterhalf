@@ -22,7 +22,7 @@ export function FriendListCard({
   handleAcceptRequest,
 }) {
   return (
-    <Link to={`/user/${user._id}`}>
+    <Link to={request ? "#" : `/user/${user._id}`}>
       <div className="mb-2 flex space-x-2 items-stretch">
         <img
           className="w-12 h-12  rounded-md  object-cover"

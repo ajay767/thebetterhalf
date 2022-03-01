@@ -2,6 +2,7 @@ import jwtDecode from "jwt-decode";
 import mongoose from "mongoose";
 export const TOKEN = "S3746DSGJDHCSDG";
 export const ACCOUNT_LIST = "323DSDNBDS38_SDSKJ";
+export const FEED_POST_DRAFT = "jug_dsd33";
 
 export const setToken = (value) => {
   localStorage.setItem(TOKEN, value);

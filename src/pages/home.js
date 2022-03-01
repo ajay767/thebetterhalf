@@ -9,6 +9,7 @@ import user2 from "@assets/images/p2.jpg";
 import user3 from "@assets/images/p3.jpg";
 import user4 from "@assets/images/p4.jpg";
 import user5 from "@assets/images/p5.jpg";
+import Createpost from "@components/Createpost";
 import { Button } from "@ui";
 import profile1 from "@assets/images/user1.jpeg";
 import profile2 from "@assets/images/user2.jpeg";
@@ -163,46 +164,9 @@ function Home() {
     <Wrapper className="py-4 p-4">
       <Header />
       <div className="w-full">
-        <div className="flex items-center mb-2">
-          <img
-            src={user.profile}
-            alt={user.username}
-            className="h-8 w-8 rounded-full mr-2"
-          />
-          <div>
-            <h4 className="text-slate-600 font-medium text-sm ">
-              Good morning, {user.username}
-            </h4>
-            <p className="text-slate-500 text-xs ">What's on your mind</p>
-          </div>
-        </div>
-        <Editor
-          onInit={(evt, editor) => (tiny.current = editor)}
-          apiKey="8u6tk8h1itzc2rqq6hsko64rgabuvavkkya3zstce9i7snuy"
-          init={{
-            height: 300,
-            toolbar: false,
-            menubar: false,
-            inline: true,
-            selector: ".gg",
-            // quickbars_insert_toolbar: "quicktable image media codesample",
-            quickbars_selection_toolbar:
-              "undo redo  formatselect  " + "bold italic",
-            block_formats: "Paragraph=p;  Heading=h4",
-            plugins: [
-              "advlist quickbars autolink lists link image charmap print  anchor",
-              "searchreplace visualblocks code fullscreen",
-              "insertdatetime media table paste code help wordcount",
-            ],
-            toolbar: "undo redo  formatselect  " + "bold italic",
-            body_class: "sdss",
-            content_style:
-              "body { font-family:Helvetica,Arial,sans-serif; font-size:14px,min-height:240px }",
-          }}
-        />
-        <Button onClick={getPostContent}>Save</Button>
+        <Createpost user={user} />
       </div>
-      <FeedPost image={user3} />
+
       <FeedCard liked image={user2} />
       <FeedCard image={user4} />
       <FeedCard image={user3} />

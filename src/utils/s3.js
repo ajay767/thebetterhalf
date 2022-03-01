@@ -1,37 +1,25 @@
-import { Upload } from "@aws-sdk/lib-storage";
-import { S3Client } from "@aws-sdk/client-s3";
+import { general } from "@services";
+import api from "@constant/api";
 
-const upload = async (file, onProgress, onComplete) => {
-  const target = {
-    Bucket: process.env.REACT_APP_AWS_BUCKET,
-    Key: file.name,
-    Body: file,
-  };
+export const uploadImageFile = async (file, setProgress) => {
+  const res = await general.getSignedUrl({
+    contentType: file.type,
+  });
+  const url = res.data.url;
 
-  const credientails = {
-    region: process.env.REACT_APP_REGION,
-    credentials: {
-      accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+  await api.put(url, file, {
+    headers: {
+      "Content-Type": "multipart/form-data",
     },
-  };
+    onUploadProgress: (data) => {
+      let uptill = Math.round((100 * data.loaded) / data.total);
+      setProgress(Math.max(0, --uptill));
+    },
+  });
 
-  try {
-    const parallelUploads3 = new Upload({
-      client: new S3Client(credientails),
-      leavePartsOnError: false, // optional manually handle dropped parts
-      params: target,
-    });
+  const imageUrl = url.split("?")[0];
 
-    parallelUploads3.on("httpUploadProgress", (progress) => {
-      onProgress(progress);
-    });
-
-    const data = await parallelUploads3.done();
-    onComplete(data);
-  } catch (e) {
-    console.log(e);
-  }
+  return imageUrl;
 };
 
-export default upload;
+export default { uploadImageFile };

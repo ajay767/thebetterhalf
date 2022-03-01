@@ -1,19 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { MdMessage } from "react-icons/md";
-import Modal from "@components/Modal";
+
 import Header from "@front/Header";
 import Wrapper from "@layout/Wrapper";
 import avtar from "@assets/avtar/user.png";
 import { friend } from "@services";
-import user1 from "@assets/images/p1.jpg";
-import user2 from "@assets/images/p2.jpg";
-import user3 from "@assets/images/p3.jpg";
-import user4 from "@assets/images/p4.jpg";
-import user5 from "@assets/images/p5.jpg";
-
-import { BsPlus } from "react-icons/bs";
+import { IoImageSharp } from "react-icons/io5";
+import { feed } from "@services";
 import { catchError } from "@utils";
+import PostDetails from "@components/PostDetails";
+
+function PostFeed({ post }) {
+  const [postModal, setPostModal] = useState(false);
+  const toggle = () => {
+    setPostModal((e) => !e);
+  };
+  return (
+    <>
+      {postModal && <PostDetails post={post} onClose={toggle} />}
+      <div
+        onClick={toggle}
+        className="w-full aspect-square  rounded-md overflow-hidden cursor-pointer"
+      >
+        <img
+          src={post?.poster[0]}
+          alt={post.caption}
+          className="h-full w-full object-cover"
+        />
+      </div>
+    </>
+  );
+}
 
 function User() {
   const params = useParams();
@@ -23,6 +41,22 @@ function User() {
     lastName: "",
     profile: avtar,
   });
+  const [feeds, setFeeds] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const res = await feed.getUserPost(user._id);
+
+      if (res.data.status) {
+        setFeeds(res.data.posts);
+      }
+    };
+
+    if (user._id) {
+      console.log("fetcing post", user._id);
+      fetchPosts();
+    }
+  }, [user]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -67,41 +101,17 @@ function User() {
           </span>
         </div>
       </div>
+      {!Boolean(feeds.length) && (
+        <>
+          <IoImageSharp size={56} className="mt-8 mx-auto" />
+          <p className="text-sm text-center">No Post Yet</p>
+        </>
+      )}
       <div className="my-4 grid grid-cols-3 gap-2 ">
-        <img
-          src={user1}
-          className="w-full aspect-square rounded  object-cover "
-        />
-        <img
-          src={user2}
-          className="w-full aspect-square rounded  object-cover "
-        />
-        <img
-          src={user3}
-          className="w-full aspect-square rounded  object-cover "
-        />
-        <img
-          src={user4}
-          className="w-full aspect-square rounded  object-cover "
-        />
-        <img
-          src={user5}
-          className="w-full aspect-square rounded  object-cover "
-        />
+        {feeds.map((curr) => (
+          <PostFeed key={curr._id} post={curr} />
+        ))}
       </div>
-      <Modal>
-        <div className="bg-white w-8/12 mx-auto flex">
-          <img src={user1} className="w-5/12 h-[70vh]  object-cover " />
-          <div className="w-7/12 p-2">
-            <span className="h-10 w-10 ml-auto transform rotate-45 rounded-full bg-gray-100 cursor-pointer   flex items-center justify-center">
-              <BsPlus size={32} className="text-gray-600" />
-            </span>
-            <div>
-                <img className="h-5 w-5 rounded-full" src={} />
-            </div>
-          </div>
-        </div>
-      </Modal>
     </Wrapper>
   );
 }
