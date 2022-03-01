@@ -1,6 +1,6 @@
 const Friend = require("./../models/friendModel");
 const AppError = require("./../utils/AppError");
-
+const { getFriendsHelper } = require("../helpers/friendHelper");
 exports.sendRequest = async (req, res, next) => {
   try {
     const user = req.user;
@@ -90,29 +90,7 @@ exports.deleteRequest = async (req, res, next) => {
 exports.getAllFriends = async (req, res, next) => {
   try {
     const user = req.user._id;
-    const allFriends = await Friend.find({
-      $or: [
-        {
-          requestedBy: user,
-          status: "Accepted",
-        },
-        {
-          intentedTo: user,
-          status: "Accepted",
-        },
-      ],
-    }).populate("requestedBy intentedTo");
-    const Friends = allFriends.map((friend) => {
-      const { intentedTo, requestedBy } = friend;
-      if (requestedBy._id.equals(user._id)) {
-        return {
-          ...intentedTo._doc,
-        };
-      }
-      return {
-        ...requestedBy._doc,
-      };
-    });
+    const Friends = await getFriendsHelper(user);
     res.json({
       data: Friends,
       status: true,
@@ -160,6 +138,44 @@ exports.getAllRequests = async (req, res, next) => {
       data: requests,
       status: true,
       message: "Success",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+exports.getRecommendation = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const Friends = await getFriendsHelper(user);
+    const new_recommended = [];
+    const promiseArr = Friends.map(async (friend) => {
+      const friends = await getFriendsHelper(friend._id);
+      const promiseArr2 = friends.map(async (friend) => {
+        const user_friend = await Friend.findOne({
+          $or: [
+            {
+              requestedBy: friend,
+              intentedTo: req.user._id,
+              status: "Accepted",
+            },
+            {
+              intentedTo: friend,
+              requestedBy: req.user._id,
+              status: "Accepted",
+            },
+          ],
+        }).populate("requestedBy intentedTo");
+        if (!user_friend) {
+          new_recommended.push(friend);
+        }
+      });
+      Promise.all(promiseArr2);
+    });
+    Promise.all(promiseArr);
+    res.json({
+      data: new_recommended,
+      status: "Success",
+      message: "Here is your all Friends",
     });
   } catch (error) {
     next(error);
