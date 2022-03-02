@@ -1,13 +1,13 @@
-const Message = require('./../models/messageModel');
-const cloudinary = require('./../utils/cloudinary');
-const streamifier = require('streamifier');
-const { createChat } = require('./../helpers/chatHelper');
+const Message = require("./../models/messageModel");
+const cloudinary = require("./../utils/cloudinary");
+const streamifier = require("streamifier");
+const { createChat } = require("./../helpers/chatHelper");
 async function uploadImage(buffer) {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        folder: 'betterhalf',
-        upload_preset: 'ml_default',
+        folder: "betterhalf",
+        upload_preset: "ml_default",
       },
       (error, result) => {
         if (result) resolve(result);
@@ -24,18 +24,21 @@ class Connection {
     this.socket = socket;
 
     socket.join(socket.userId);
-    socket.on('message', (...args) => this.handleMessage(...args));
-    socket.on('media-sharing', (...args) => this.handleMedia(...args));
-    socket.on('disconnect', () => console.log('user disconnected'));
+    socket.on("message", (...args) => this.handleMessage(...args));
+    socket.on("media-sharing-start", (...args) =>
+      this.handleMediaStart(...args)
+    );
+    socket.on("media-sharing-end", (...args) => this.handleMediaEnd(...args));
+    socket.on("disconnect", () => console.log("user disconnected"));
 
     let uploader = new siofu();
     uploader.listen(socket);
-    uploader.on('progress', async (event) => {
+    uploader.on("progress", async (event) => {
       try {
         if (event.file.success) {
           const result = await uploadImage(event.buffer);
           console.log(this.socket.handshake.userId, result.secure_url);
-          this.io.to(this.socket.handshake.userId).emit('media', {
+          this.io.to(this.socket.handshake.userId).emit("media", {
             url: result.secure_url,
             format: result.format,
             height: result.height,
@@ -44,7 +47,7 @@ class Connection {
           });
         }
       } catch (error) {
-        console.log('cloudinary upload error', error);
+        console.log("cloudinary upload error", error);
       }
     });
   }
@@ -56,39 +59,47 @@ class Connection {
       message: data.message,
       media: data?.media,
     });
-    this.io.to(socketId).emit('message', data);
+    this.io.to(socketId).emit("message", data);
   }
-  handleMedia(socketId) {
-    this.io.to(socketId).emit('media-sharing', {
-      message: 'Hold on!',
+
+  handleMediaStart(socketId) {
+    console.log("media stater from", socketId);
+    this.io.to(socketId).emit("media-sharing-start", {
+      status: true,
+    });
+  }
+
+  handleMediaEnd(socketId) {
+    this.io.to(socketId).emit("media-sharing-end", {
+      status: false,
     });
   }
 }
 function initiateChat(io, siofu) {
-  console.log('initializing chat connection');
+  console.log("initializing chat connection");
 
   io.use((socket, next) => {
     const userId = socket.handshake.auth.userId;
-    console.log('middle', userId);
+    console.log("middle", userId);
     if (!userId) {
-      return next(new Error('Invalid user connection request'));
+      return next(new Error("Invalid user connection request"));
     }
     socket.userId = userId;
     next();
   });
 
-  io.on('connection', (socket) => {
-    console.log('new connection istablished!!', socket.userId);
+  io.on("connection", (socket) => {
+    console.log("new connection istablished!!", socket.userId);
 
     new Connection({ io, socket, siofu });
     const users = [];
-    for (let [id, socket] of io.of('/').sockets) {
+    for (let [id, socket] of io.of("/").sockets) {
       users.push({
         socketId: id,
         userId: socket.userId,
       });
     }
-    socket.emit('users', users);
+    socket.emit("users", users);
   });
 }
 
