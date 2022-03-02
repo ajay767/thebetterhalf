@@ -21,5 +21,6 @@ router.put(
 );
 
 router.get("/user/:id", authController.protect, userController.getUser);
+router.get("/user-search", userController.searchUser);
 
 module.exports = router;

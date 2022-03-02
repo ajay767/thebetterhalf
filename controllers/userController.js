@@ -193,3 +193,20 @@ exports.uploadProfile = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.searchUser = async (req, res, next) => {
+  try {
+    const searched_word = req.query.word;
+    const document = await User.find({
+      username: {
+        $regex: "^" + searched_word,
+      },
+    });
+    res.json({
+      data: document,
+      message: "Success",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
