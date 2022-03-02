@@ -7,7 +7,7 @@ const router = express.Router();
 router.use(authController.protect);
 
 router.route("/").post(friendController.sendRequest);
-router.route("/delete/:id").delete(friendController.sendRequest);
+router.route("/delete/:id").delete(friendController.deleteRequest);
 router.route("/accept/:id").get(friendController.acceptRequest);
 router.route("/get-all-friend").get(friendController.getAllFriends);
 router.route("/get-pending-friend").get(friendController.getAllPendingFriends);

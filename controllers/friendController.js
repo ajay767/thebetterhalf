@@ -1,6 +1,7 @@
 const Friend = require("./../models/friendModel");
 const AppError = require("./../utils/AppError");
 const { getFriendsHelper } = require("../helpers/friendHelper");
+
 exports.sendRequest = async (req, res, next) => {
   try {
     const user = req.user;
@@ -20,8 +21,8 @@ exports.sendRequest = async (req, res, next) => {
         },
       ],
     });
-    if (existRequest) {
-      console.log(existRequest);
+
+    if (existRequest || receiver + "" === user._id + "") {
       return next(new AppError("Error while sending friend request", 404));
     }
     // mongo error -> req->user_id and int->coming_id
@@ -143,6 +144,7 @@ exports.getAllRequests = async (req, res, next) => {
     next(error);
   }
 };
+
 exports.getRecommendation = async (req, res, next) => {
   try {
     const user = req.user;
@@ -169,9 +171,9 @@ exports.getRecommendation = async (req, res, next) => {
           new_recommended.push(friend);
         }
       });
-      Promise.all(promiseArr2);
+      await Promise.all(promiseArr2);
     });
-    Promise.all(promiseArr);
+    await Promise.all(promiseArr);
     res.json({
       data: new_recommended,
       status: "Success",
