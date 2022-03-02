@@ -25,6 +25,7 @@ class Connection {
 
     socket.join(socket.userId);
     socket.on('message', (...args) => this.handleMessage(...args));
+    socket.on('media-sharing', (...args) => this.handleMedia(...args));
     socket.on('disconnect', () => console.log('user disconnected'));
 
     let uploader = new siofu();
@@ -57,8 +58,12 @@ class Connection {
     });
     this.io.to(socketId).emit('message', data);
   }
+  handleMedia(socketId) {
+    this.io.to(socketId).emit('media-sharing', {
+      message: 'Hold on!',
+    });
+  }
 }
-
 function initiateChat(io, siofu) {
   console.log('initializing chat connection');
 
