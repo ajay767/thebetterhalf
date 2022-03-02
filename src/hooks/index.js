@@ -1,2 +1,3 @@
 import useTextareaHeightDriver from "./useTextareaHeightDriver";
-export { useTextareaHeightDriver };
+import useClickoutside from "./useClickoutside";
+export { useTextareaHeightDriver, useClickoutside };

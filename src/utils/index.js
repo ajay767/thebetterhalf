@@ -7,4 +7,11 @@ const catchError = (err) => {
   } else toast.error("Something went wrong!");
 };
 
-export { catchError, uploadImageFile };
+const getImageFromFile = (file) => {
+  if (typeof file == "object" && file) {
+    const url = URL.createObjectURL(file);
+    return url;
+  } else return file;
+};
+
+export { catchError, uploadImageFile, getImageFromFile };
