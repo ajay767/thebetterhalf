@@ -29,6 +29,10 @@ class Connection {
       this.handleMediaStart(...args)
     );
     socket.on("media-sharing-end", (...args) => this.handleMediaEnd(...args));
+
+    socket.on("typing-start", (...args) => this.handleTypingStart(...args));
+    socket.on("typing-end", (...args) => this.handleTypingEnd(...args));
+
     socket.on("disconnect", () => console.log("user disconnected"));
 
     let uploader = new siofu();
@@ -63,7 +67,6 @@ class Connection {
   }
 
   handleMediaStart(socketId) {
-    console.log("media stater from", socketId);
     this.io.to(socketId).emit("media-sharing-start", {
       status: true,
     });
@@ -74,13 +77,21 @@ class Connection {
       status: false,
     });
   }
+
+  handleTypingStart(socketId) {
+    console.log(socketId, "typing...");
+    this.io.to(socketId).emit("typing-start");
+  }
+
+  handleTypingEnd(socketId) {
+    this.io.to(socketId).emit("typing-end");
+  }
 }
 function initiateChat(io, siofu) {
   console.log("initializing chat connection");
 
   io.use((socket, next) => {
     const userId = socket.handshake.auth.userId;
-    console.log("middle", userId);
     if (!userId) {
       return next(new Error("Invalid user connection request"));
     }
