@@ -4,6 +4,7 @@ const s3Router = require('./s3Routes');
 const postRouter = require('./postRoutes');
 const commentRouter = require('./commentRoutes');
 const likeRouter = require('./likeRoutes');
+const chatRouter = require('./chatRoutes');
 
 module.exports = {
   authRouter,
@@ -12,4 +13,5 @@ module.exports = {
   postRouter,
   commentRouter,
   likeRouter,
+  chatRouter,
 };

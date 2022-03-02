@@ -1,29 +1,20 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const chatSchema = new mongoose.Schema(
   {
-    admin: {
+    user1: {
       type: mongoose.Schema.ObjectId,
-      ref: "User",
+      required: [true, 'User 1 cannot be null or empty'],
+      ref: 'User',
     },
-    participants: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: "User",
-      },
-    ],
-    isPrivate: {
-      type: Boolean,
-      default: false,
+    user2: {
+      type: mongoose.Schema.ObjectId,
+      required: [true, 'User 2 cannot be null or empty'],
+      ref: 'User',
     },
-    name: {
-      type: String,
-      required: [true, "Chat cannot be created without name"],
-    },
-    photo: String,
   },
   { timestamps: true }
 );
 
-const Chat = mongoose.model("Chat", chatSchema);
+const Chat = mongoose.model('Chat', chatSchema);
 module.exports = Chat;

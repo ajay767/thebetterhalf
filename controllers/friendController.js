@@ -1,12 +1,12 @@
-const Friend = require("./../models/friendModel");
-const AppError = require("./../utils/AppError");
-const { getFriendsHelper } = require("../helpers/friendHelper");
+const Friend = require('./../models/friendModel');
+const AppError = require('./../utils/AppError');
+const { getFriendsHelper } = require('../helpers/friendHelper');
 exports.sendRequest = async (req, res, next) => {
   try {
     const user = req.user;
     const { receiver } = req.body;
     if (!receiver) {
-      return next(new AppError("Error while sending friend request", 404));
+      return next(new AppError('Error while sending friend request', 404));
     }
     const existRequest = await Friend.findOne({
       $or: [
@@ -22,7 +22,7 @@ exports.sendRequest = async (req, res, next) => {
     });
     if (existRequest) {
       console.log(existRequest);
-      return next(new AppError("Error while sending friend request", 404));
+      return next(new AppError('Error while sending friend request', 404));
     }
     // mongo error -> req->user_id and int->coming_id
     const friendRequest = await Friend.create({
@@ -33,7 +33,7 @@ exports.sendRequest = async (req, res, next) => {
     res.status(201).json({
       data: friendRequest,
       status: true,
-      message: "Request Sent",
+      message: 'Request Sent',
     });
   } catch (error) {
     next(error);
@@ -50,7 +50,7 @@ exports.acceptRequest = async (req, res, next) => {
         intentedTo,
       },
       {
-        status: "Accepted",
+        status: 'Accepted',
       },
       {
         new: true,
@@ -58,12 +58,12 @@ exports.acceptRequest = async (req, res, next) => {
       }
     );
     if (!friendRequest) {
-      return next(new AppError("No such Friend Request exist", 404));
+      return next(new AppError('No such Friend Request exist', 404));
     }
     res.status(200).json({
       data: friendRequest,
       status: true,
-      message: "Request Accepted",
+      message: 'Request Accepted',
     });
   } catch (error) {
     next(error);
@@ -80,7 +80,7 @@ exports.deleteRequest = async (req, res, next) => {
     });
     res.status(200).json({
       status: true,
-      message: "Requested Deleted Successfully",
+      message: 'Requested Deleted Successfully',
     });
   } catch (error) {
     next(error);
@@ -106,8 +106,8 @@ exports.getAllPendingFriends = async (req, res, next) => {
     const user = req.user._id;
     const allFriends = await Friend.find({
       intentedTo: user,
-      status: "Requested",
-    }).populate("requestedBy intentedTo");
+      status: 'Requested',
+    }).populate('requestedBy intentedTo');
 
     const Friends = allFriends.map((friend) => {
       const { intentedTo, requestedBy } = friend;
@@ -137,7 +137,7 @@ exports.getAllRequests = async (req, res, next) => {
     res.status(200).json({
       data: requests,
       status: true,
-      message: "Success",
+      message: 'Success',
     });
   } catch (error) {
     next(error);
@@ -147,35 +147,42 @@ exports.getRecommendation = async (req, res, next) => {
   try {
     const user = req.user;
     const Friends = await getFriendsHelper(user);
+    // console.log(Friends);
     const new_recommended = [];
     const promiseArr = Friends.map(async (friend) => {
       const friends = await getFriendsHelper(friend._id);
       const promiseArr2 = friends.map(async (friend) => {
+        if (friend._id == req.user._id) {
+          return null;
+        }
         const user_friend = await Friend.findOne({
           $or: [
             {
-              requestedBy: friend,
+              requestedBy: friend._id,
               intentedTo: req.user._id,
-              status: "Accepted",
+              status: 'Accepted',
             },
             {
-              intentedTo: friend,
+              intentedTo: friend._id,
               requestedBy: req.user._id,
-              status: "Accepted",
+              status: 'Accepted',
             },
           ],
-        }).populate("requestedBy intentedTo");
+        });
+        // console.log('----------------------');
+        // console.log(user_friend);
+        // console.log('----------------------');
         if (!user_friend) {
           new_recommended.push(friend);
         }
       });
-      Promise.all(promiseArr2);
+      await Promise.all(promiseArr2);
     });
-    Promise.all(promiseArr);
+    await Promise.all(promiseArr);
     res.json({
       data: new_recommended,
-      status: "Success",
-      message: "Here is your all Friends",
+      status: 'Success',
+      message: 'Here is your all Friends',
     });
   } catch (error) {
     next(error);
