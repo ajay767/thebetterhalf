@@ -1,66 +1,66 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useAuth } from '@context/authContext';
-import { Link, useHistory, useParams } from 'react-router-dom';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import { HiDownload } from 'react-icons/hi';
-import { MdInsertPhoto } from 'react-icons/md';
-import { RiSendPlaneFill } from 'react-icons/ri';
-import socketio from 'socket.io-client';
-import Tippy from '@tippyjs/react';
-import Wrapper from '@layout/Wrapper';
-import { friend } from '@services';
-import { BsPlus } from 'react-icons/bs';
+import React, { useEffect, useState, useRef } from "react";
+import { useAuth } from "@context/authContext";
+import { Link, useHistory, useParams } from "react-router-dom";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { HiDownload } from "react-icons/hi";
+import { MdInsertPhoto } from "react-icons/md";
+import { RiSendPlaneFill } from "react-icons/ri";
+import socketio from "socket.io-client";
+import Tippy from "@tippyjs/react";
+import Wrapper from "@layout/Wrapper";
+import { friend } from "@services";
+import { BsPlus } from "react-icons/bs";
 
-import SocketIOFileUpload from 'socketio-file-upload';
-import { catchError, getImageFromFile } from '@utils';
-import { IoIosArrowBack } from 'react-icons/io';
-import user1 from '@assets/images/p6.jpg';
-import Modal from '@components/Modal';
-import moment from 'moment';
-import { uploadImageFile } from '@utils';
-import { useClickoutside } from '@hooks';
-import { Line } from 'rc-progress';
+import SocketIOFileUpload from "socketio-file-upload";
+import { catchError, getImageFromFile } from "@utils";
+import { IoIosArrowBack } from "react-icons/io";
+import user1 from "@assets/images/p6.jpg";
+import Modal from "@components/Modal";
+import moment from "moment";
+import { uploadImageFile } from "@utils";
+import { useClickoutside } from "@hooks";
+import { Line } from "rc-progress";
 let socket = null;
 
 function Message({ data, type }) {
   const [enlargeMedia, setEnlargeMedia] = useState(false);
 
   switch (type) {
-    case 'SENT': {
+    case "SENT": {
       return (
-        <div className='p-2 bg-pink-600 mt-2 text-sm rounded-l-lg   min-w-[90px]  rounded-tr-lg     rounded-sm max-w-[75%] w-max  ml-auto text-white '>
+        <div className="p-2 bg-pink-600 mt-2 text-sm rounded-l-lg   min-w-[90px]  rounded-tr-lg     rounded-sm max-w-[75%] w-max  ml-auto text-white ">
           {data.media && (
             <img
               src={data.media}
               alt={data.media}
-              className='w-[220px] rounded mb-2'
+              className="w-[220px] rounded mb-2"
             />
           )}
           {data.message}
-          <span className='text-[12px]  block text-left text-gray-200'>
+          <span className="text-[12px]  block text-left text-gray-200">
             {moment(data.createdAt).calendar()}
           </span>
         </div>
       );
     }
-    case 'RECEIVED': {
+    case "RECEIVED": {
       return (
-        <div className='flex items-end mt-2 space-x-2'>
+        <div className="flex items-end mt-2 space-x-2">
           <img
             src={data.photo}
             alt={data.name}
-            className='h-8 w-8 rounded-full object-cover flex-shrink-0'
+            className="h-8 w-8 rounded-full object-cover flex-shrink-0"
           />
-          <div className='p-2 bg-slate-200 text-gray-600 text-sm  rounded-r-lg  rounded-tl-lg   rounded-sm max-w-[70%] w-max '>
+          <div className="p-2 bg-slate-200 text-gray-600 text-sm  rounded-r-lg  rounded-tl-lg   rounded-sm max-w-[70%] w-max ">
             {data.media && (
               <img
                 src={data.media}
                 alt={data.media}
-                className='w-[220px] rounded mb-2'
+                className="w-[220px] rounded mb-2"
               />
             )}
             {data.message}
-            <span className='text-[12px]  block text-right text-gray-400'>
+            <span className="text-[12px]  block text-right text-gray-400">
               {moment(data.createdAt).calendar()}
             </span>
           </div>
@@ -74,92 +74,101 @@ function Message({ data, type }) {
   }
 }
 
-const FileExplorer = React.forwardRef(({ handleMedia }, ref) => {
-  const [file, setFile] = useState(null);
-  const [message, setMessage] = useState('');
-  const [progress, setProgress] = useState(0);
-  const [uploading, setUploading] = useState(false);
+const FileExplorer = React.forwardRef(
+  ({ handleMedia, emitEndEvent, emitStartEvent }, ref) => {
+    const [file, setFile] = useState(null);
+    const [message, setMessage] = useState("");
+    const [progress, setProgress] = useState(0);
+    const [uploading, setUploading] = useState(false);
 
-  async function handleFile(file) {
-    try {
-      setFile(file);
-      setUploading(true);
-      const res = await uploadImageFile(file, setProgress);
-      setFile(res);
-    } catch (error) {
-      catchError(error);
-    } finally {
-      setUploading(false);
+    async function handleFile(file) {
+      try {
+        setFile(file);
+        setUploading(true);
+        const res = await uploadImageFile(file, setProgress);
+        setFile(res);
+      } catch (error) {
+        catchError(error);
+      } finally {
+        setUploading(false);
+      }
     }
-  }
 
-  return (
-    <div
-      ref={ref}
-      className='p-4 rounded bg-white mx-4 w-full md:w-8/12 lg:w-4/12 lg:mx-auto'
-    >
+    useEffect(() => {
+      emitStartEvent();
+      return function () {
+        emitEndEvent();
+      };
+    }, []);
+
+    return (
       <div
-        className={`border border-gray-400     border-dashed  p-4 rounded h-[320px] ${
-          !file ? ' grid place-content-center ' : ''
-        }`}
+        ref={ref}
+        className="p-4 rounded bg-white mx-4 w-full md:w-8/12 lg:w-4/12 lg:mx-auto"
       >
-        {file ? (
-          <img
-            src={getImageFromFile(file) || user1}
-            alt='3dd'
-            className='w-full h-full object-cover rounded-md '
-          />
-        ) : (
-          <p className='text-gray-500 text-base text-center m-auto h-full '>
-            No file choosen
-          </p>
-        )}
-      </div>
-      <input
-        onChange={(e) => handleFile(e.target.files[0])}
-        type='file'
-        className='hidden'
-        id='file_share'
-      />
-      <div className='flex items-center'>
-        <label
-          htmlFor='file_share'
-          className='text-sm text-slate-300 bg-gray-600 p-2 px-4 mr-4 rounded my-4 block w-max cursor-pointer'
+        <div
+          className={`border border-gray-400     border-dashed  p-4 rounded h-[320px] ${
+            !file ? " grid place-content-center " : ""
+          }`}
         >
-          Choose File
-        </label>
-        <p className='text-sm text-gray-500 '>{file?.name}</p>
-      </div>
-      {uploading && (
-        <div className='mb-4'>
-          <p className='text-sm text-gray-600 mb-2'>
-            {' '}
-            Uploading file {progress}%
-          </p>
-          <Line percent={progress} strokeWidth='1' strokeColor='#2a2a2a' />
+          {file ? (
+            <img
+              src={getImageFromFile(file) || user1}
+              alt="3dd"
+              className="w-full h-full object-cover rounded-md "
+            />
+          ) : (
+            <p className="text-gray-500 text-base text-center m-auto h-full ">
+              No file choosen
+            </p>
+          )}
         </div>
-      )}
-      <div className='flex'>
-        <textarea
-          placeholder='Message'
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          rows={1}
-          className='text-sm pl-0 flex-grow ring-0 border-0 focus:ring-0'
-        ></textarea>
-        <button
-          onClick={() => {
-            handleMedia({ message, media: file });
-          }}
-          disabled={uploading}
-          className='text-sm p-2 px-4 flex-shrink-0 text-gray-600  rounded-full h-10 w-10 grid place-content-center'
-        >
-          <RiSendPlaneFill size={24} />
-        </button>
+        <input
+          onChange={(e) => handleFile(e.target.files[0])}
+          type="file"
+          className="hidden"
+          id="file_share"
+        />
+        <div className="flex items-center">
+          <label
+            htmlFor="file_share"
+            className="text-sm text-slate-300 bg-gray-600 p-2 px-4 mr-4 rounded my-4 block w-max cursor-pointer"
+          >
+            Choose File
+          </label>
+          <p className="text-sm text-gray-500 ">{file?.name}</p>
+        </div>
+        {uploading && (
+          <div className="mb-4">
+            <p className="text-sm text-gray-600 mb-2">
+              {" "}
+              Uploading file {progress}%
+            </p>
+            <Line percent={progress} strokeWidth="1" strokeColor="#2a2a2a" />
+          </div>
+        )}
+        <div className="flex">
+          <textarea
+            placeholder="Message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            rows={1}
+            className="text-sm pl-0 flex-grow ring-0 border-0 focus:ring-0"
+          ></textarea>
+          <button
+            onClick={() => {
+              handleMedia({ message, media: file });
+            }}
+            disabled={uploading}
+            className="text-sm p-2 px-4 flex-shrink-0 text-gray-600  rounded-full h-10 w-10 grid place-content-center"
+          >
+            <RiSendPlaneFill size={24} />
+          </button>
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 function Conversation() {
   const me = useAuth();
@@ -169,9 +178,10 @@ function Conversation() {
   const [mediaModal, setMediaModal] = useState(false);
   const [messages, setMessages] = useState([]);
   const [fetching, setFetching] = useState(false);
+  const [mediaAcknowledge, setMediaAcknowledge] = useState(false);
   const [user, setUser] = useState({});
 
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   useClickoutside(fileExplorerRef, () => setMediaModal(false));
 
   const handleMessage = () => {
@@ -181,7 +191,7 @@ function Conversation() {
         return [
           ...e,
           {
-            type: 'SENT',
+            type: "SENT",
             photo: me.profile,
             createdAt: new Date(),
             message: message,
@@ -189,8 +199,9 @@ function Conversation() {
           },
         ];
       });
-      socket.emit('message', { message, media: null }, user._id);
-      setMessage('');
+      socket.emit("message", { message, media: null }, user._id);
+
+      setMessage("");
     }
   };
 
@@ -201,7 +212,7 @@ function Conversation() {
         return [
           ...e,
           {
-            type: 'SENT',
+            type: "SENT",
             photo: me.profile,
             createdAt: new Date(),
             message: message,
@@ -210,8 +221,8 @@ function Conversation() {
           },
         ];
       });
-      socket.emit('message', { message, media }, user._id);
-      setMessage('');
+      socket.emit("message", { message, media }, user._id);
+      setMessage("");
     }
 
     setMediaModal(false);
@@ -236,7 +247,6 @@ function Conversation() {
 
   useEffect(() => {
     const Endpoint = process.env.REACT_APP_SERVER;
-    console.log('initiating connection' + ' at ' + Endpoint);
 
     if (me._id) {
       socket = socketio(Endpoint, {
@@ -244,21 +254,14 @@ function Conversation() {
         withCredentials: true,
       });
 
-      let uploader = new SocketIOFileUpload(socket);
-      // uploader.listenOnInput(document.getElementById("chat_media"));
-
-      // uploader.addEventListener("progress", (e) =>
-      //   setPercentage(Math.floor((e.bytesLoaded / e.file.size) * 100))
-      // );
-
       socket.auth = { userId: me._id };
       socket.connect();
 
-      socket.on('message', ({ message, media }) => {
+      socket.on("message", ({ message, media }) => {
         setMessages((e) => [
           ...e,
           {
-            type: 'RECEIVED',
+            type: "RECEIVED",
             photo: user.profile,
             createdAt: new Date(),
             message: message,
@@ -268,19 +271,28 @@ function Conversation() {
         ]);
       });
 
-      socket.on('users', (list) => {
-        console.log(list);
+      socket.on("media-sharing-start", () => {
+        console.log("start");
+        setMediaAcknowledge(true);
       });
 
-      socket.on('media', (data) => {
+      socket.on("media-sharing-end", () => {
+        setMediaAcknowledge(false);
+      });
+
+      socket.on("users", (list) => {
+        // console.log(list);
+      });
+
+      socket.on("media", (data) => {
         console.log(data);
       });
 
-      socket.on('disconnect', () => {
-        console.log('disconnected');
+      socket.on("disconnect", () => {
+        console.log("disconnected");
       });
 
-      socket.on('connect_error', (err) => {
+      socket.on("connect_error", (err) => {
         console.log(err.message);
       });
     }
@@ -293,17 +305,16 @@ function Conversation() {
     };
   }, [me]);
 
-  console.log(messages);
   return (
     <Wrapper>
       {fetching ? (
-        <p className='text-sm text-gray-500 text-center my-16'>Loading...</p>
+        <p className="text-sm text-gray-500 text-center my-16">Loading...</p>
       ) : (
-        <div className='flex flex-col min-h-screen relative '>
-          <div className='flex items-center space-x-2 p-4 bg-white py-2 justify-between flex-shrink-0 sticky top-0'>
-            <div className='flex items-center space-x-2 '>
+        <div className="flex flex-col min-h-screen relative ">
+          <div className="flex items-center space-x-2 p-4 bg-white py-2 justify-between flex-shrink-0 sticky top-0">
+            <div className="flex items-center space-x-2 ">
               <span
-                className='h-10 grid place-content-center cursor-pointer text-gray-700'
+                className="h-10 grid place-content-center cursor-pointer text-gray-700"
                 onClick={() => {
                   history.goBack();
                 }}
@@ -313,46 +324,52 @@ function Conversation() {
               <img
                 src={user?.profile}
                 alt={user?.username}
-                className='h-10 w-10 rounded-full object-cover flex-shrink-0'
+                className="h-10 w-10 rounded-full object-cover flex-shrink-0"
               />
-              <div className='text-xs'>
-                <p className='font-medium  '>{user?.username}</p>
-                <p className='flex items-center space-x-2'>
-                  Active Now
-                  <span className='h-2 w-2 ml-2 bg-green-600 rounded-full block'></span>
+              <div className="text-xs">
+                <p className="font-medium  ">{user?.username}</p>
+                <p className="flex items-center space-x-2">
+                  {mediaAcknowledge ? (
+                    "Sharing media..."
+                  ) : (
+                    <>
+                      Active
+                      <span className="h-2 w-2 ml-2 bg-green-600 rounded-full block"></span>
+                    </>
+                  )}
                 </p>
               </div>
             </div>
             <Tippy
               interactive
               arrow={false}
-              trigger='mouseenter'
+              trigger="mouseenter"
               delay={0}
-              theme='light'
-              className='!bg-transparent   '
+              theme="light"
+              className="!bg-transparent   "
               content={
-                <div className='bg-[#2a2a2a] z-[1000] shadow-md w-36 p-0 rounded overflow-hidden'>
+                <div className="bg-[#2a2a2a] z-[1000] shadow-md w-36 p-0 rounded overflow-hidden">
                   <Link
-                    to='/home'
-                    className='text-sm px-4 p-2 block hover:bg-black text-white'
+                    to="/home"
+                    className="text-sm px-4 p-2 block hover:bg-black text-white"
                   >
                     Home
                   </Link>
                   <Link
-                    to='/chat'
-                    className='text-sm px-4 p-2 block hover:bg-black text-white'
+                    to="/chat"
+                    className="text-sm px-4 p-2 block hover:bg-black text-white"
                   >
                     Message
                   </Link>
                   <Link
-                    to='/home'
-                    className='text-sm px-4 p-2 block hover:bg-black text-white'
+                    to="/home"
+                    className="text-sm px-4 p-2 block hover:bg-black text-white"
                   >
                     Setting
                   </Link>
                   <Link
-                    to='/home'
-                    className='text-sm px-4 p-2 block hover:bg-black text-white'
+                    to="/home"
+                    className="text-sm px-4 p-2 block hover:bg-black text-white"
                   >
                     Logout
                   </Link>
@@ -365,8 +382,8 @@ function Conversation() {
             </Tippy>
           </div>
 
-          <div className='border-t-[1px] border-gray-200 p-3 flex-grow overflow-y-scroll  scrollbar-hide flex flex-col text-sm md:text-xs  '>
-            <span className='text-xs mt-2 text-white bg-gray-500 shadow mx-auto block w-max p-1 px-2 rounded'>
+          <div className="border-t-[1px] border-gray-200 p-3 flex-grow overflow-y-scroll  scrollbar-hide flex flex-col text-sm md:text-xs  ">
+            <span className="text-xs mt-2 text-white bg-gray-500 shadow mx-auto block w-max p-1 px-2 rounded">
               Today
             </span>
             {messages.map((curr, ind) => {
@@ -376,36 +393,42 @@ function Conversation() {
           {mediaModal && (
             <Modal>
               <FileExplorer
+                emitStartEvent={() => {
+                  socket.emit("media-sharing-start", user._id);
+                }}
+                emitEndEvent={() => {
+                  socket.emit("media-sharing-end", user._id);
+                }}
                 handleMedia={handleMediaMessage}
                 ref={fileExplorerRef}
               />
             </Modal>
           )}
-          <div className='bg-slate-400 p-2 flex-shrink-0 flex items-end space-x-2 sticky bottom-0  '>
+          <div className="bg-slate-400 p-2 flex-shrink-0 flex items-end space-x-2 sticky bottom-0  ">
             <label
               onClick={() => setMediaModal(true)}
-              className='cursor-pointer  '
+              className="cursor-pointer  "
             >
-              <span className='h-9 w-9 flex-shrink-0 rounded-full bg-transparent    flex items-center justify-center'>
-                <MdInsertPhoto size={22} className='text-white' />
+              <span className="h-9 w-9 flex-shrink-0 rounded-full bg-transparent    flex items-center justify-center">
+                <MdInsertPhoto size={22} className="text-white" />
               </span>
             </label>
             <textarea
               rows={1}
               onChange={(e) => setMessage(e.target.value)}
               value={message}
-              placeholder='Message'
-              className='w-full min-h-[36px] max-h-[120px] text-sm  ring-0 border-0 focus:ring-0 bg-white  rounded'
+              placeholder="Message"
+              className="w-full min-h-[36px] max-h-[120px] text-sm  ring-0 border-0 focus:ring-0 bg-white  rounded"
             ></textarea>
             <span
               onClick={handleMessage}
-              className='h-9 w-9 flex-shrink-0 rounded-full bg-transparent   cursor-pointer  flex items-center justify-center'
+              className="h-9 w-9 flex-shrink-0 rounded-full bg-transparent   cursor-pointer  flex items-center justify-center"
             >
-              <RiSendPlaneFill size={22} className='text-white' />
+              <RiSendPlaneFill size={22} className="text-white" />
             </span>
           </div>
         </div>
-      )}{' '}
+      )}{" "}
     </Wrapper>
   );
 }
