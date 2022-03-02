@@ -48,10 +48,8 @@ class Connection {
     });
   }
 
-  handleMessage(message, socketId) {
-    console.log(message, socketId, this.socket.userId);
-    //save message here
-    this.io.to(socketId).emit("message", message);
+  handleMessage(data, socketId) {
+    this.io.to(socketId).emit("message", data);
   }
 }
 
