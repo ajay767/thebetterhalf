@@ -153,6 +153,9 @@ exports.getRecommendation = async (req, res, next) => {
     const promiseArr = Friends.map(async (friend) => {
       const friends = await getFriendsHelper(friend._id);
       const promiseArr2 = friends.map(async (friend) => {
+        if (friend._id == req.user._id) {
+          return null;
+        }
         const user_friend = await Friend.findOne({
           $or: [
             {
