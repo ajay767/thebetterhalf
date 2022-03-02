@@ -12,4 +12,6 @@ router
   .route('/deletePost/:id')
   .delete(authController.protect, postController.deletePost);
 
+router.route('/getPost/:postId').get(postController.getPost);
+
 module.exports = router;

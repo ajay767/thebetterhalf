@@ -12,6 +12,11 @@ const chatSchema = new mongoose.Schema(
       required: [true, 'User 2 cannot be null or empty'],
       ref: 'User',
     },
+    latestMessage: {
+      type: String,
+      required: [true, 'Latest Message is Mandatory'],
+      default: '',
+    },
   },
   { timestamps: true }
 );

@@ -93,3 +93,12 @@ exports.getChats = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getChatOverview = async (req, res, next) => {
+  try {
+    const user = req.user._id;
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
