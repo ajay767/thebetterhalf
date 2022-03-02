@@ -41,6 +41,7 @@ function PostDetails({ post, onClose }) {
   const [message, setMessage] = useState('');
   const [list, setList] = useState([]);
   const [like, setLike] = useState(false);
+  const [totalLikes, setTotalLikes] = useState(0);
 
   const handleComment = async () => {
     try {
@@ -70,13 +71,49 @@ function PostDetails({ post, onClose }) {
 
     fetchComments();
   }, [refreshKey]);
-
+  useEffect(() => {
+    const fetchLikes = async () => {
+      try {
+        const { data } = await feed.getLikes(post._id);
+        if (data.status) {
+          data.post.likes.map(({ userId }) => {
+            console.log(userId, user._id);
+            if (userId == user._id) {
+              setLike(true);
+            }
+          });
+          setTotalLikes(data.post.likes.length);
+        }
+      } catch (err) {
+        catchError(err);
+      }
+    };
+    fetchLikes();
+  }, []);
+  const handleLike = () => {
+    const data = {
+      postId: post._id,
+    };
+    if (!like) {
+      setTotalLikes(totalLikes + 1);
+      setLike(true);
+      feed.createLike(data);
+    } else {
+      setTotalLikes(totalLikes - 1);
+      setLike(false);
+      feed.deleteLike(data);
+    }
+  };
   return (
     <Modal>
       <div className='bg-white w-11/12 md:w-8/12 mx-auto flex flex-col md:flex-row  '>
         <div className='relative md:w-5/12 h-[40vh]  md:h-[70vh]'>
-          <span className='h-10 w-10 absolute left-4 top-4 rounded-full bg-gray-100 cursor-pointer   flex items-center justify-center'>
-            <Liked size={32} className='text-pink-600' />
+          <span
+            onClick={handleLike}
+            className='h-10 w-10 absolute left-4 top-4 rounded-full bg-gray-100 cursor-pointer   flex items-center justify-center'
+          >
+            {like && <Liked size={32} className='text-pink-600' />}
+            {!like && <Unliked size={32} className='text-pink-600' />}
           </span>
           <img src={post.poster[0]} className='h-full w-full object-cover' />
         </div>

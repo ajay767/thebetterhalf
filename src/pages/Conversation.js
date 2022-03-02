@@ -1,25 +1,25 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useAuth } from "@context/authContext";
-import { Link, useHistory, useParams } from "react-router-dom";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { HiDownload } from "react-icons/hi";
-import { MdInsertPhoto } from "react-icons/md";
-import { RiSendPlaneFill } from "react-icons/ri";
-import socketio from "socket.io-client";
-import Tippy from "@tippyjs/react";
-import Wrapper from "@layout/Wrapper";
-import { friend } from "@services";
-import { BsPlus } from "react-icons/bs";
+import React, { useEffect, useState, useRef } from 'react';
+import { useAuth } from '@context/authContext';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { HiDownload } from 'react-icons/hi';
+import { MdInsertPhoto } from 'react-icons/md';
+import { RiSendPlaneFill } from 'react-icons/ri';
+import socketio from 'socket.io-client';
+import Tippy from '@tippyjs/react';
+import Wrapper from '@layout/Wrapper';
+import { friend } from '@services';
+import { BsPlus } from 'react-icons/bs';
 
-import SocketIOFileUpload from "socketio-file-upload";
-import { catchError, getImageFromFile } from "@utils";
-import { IoIosArrowBack } from "react-icons/io";
-import user1 from "@assets/images/p6.jpg";
-import Modal from "@components/Modal";
-import moment from "moment";
-import { uploadImageFile } from "@utils";
-import { useClickoutside } from "@hooks";
-import { Line } from "rc-progress";
+import SocketIOFileUpload from 'socketio-file-upload';
+import { catchError, getImageFromFile } from '@utils';
+import { IoIosArrowBack } from 'react-icons/io';
+import user1 from '@assets/images/p6.jpg';
+import Modal from '@components/Modal';
+import moment from 'moment';
+import { uploadImageFile } from '@utils';
+import { useClickoutside } from '@hooks';
+import { Line } from 'rc-progress';
 let socket = null;
 
 function Message({ data, type }) {
@@ -30,47 +30,11 @@ function Message({ data, type }) {
       return (
         <div className='p-2 bg-pink-600 mt-2 text-sm rounded-l-lg   min-w-[90px]  rounded-tr-lg     rounded-sm max-w-[75%] w-max  ml-auto text-white '>
           {data.media && (
-<<<<<<< HEAD
-            <>
-              <img
-                onClick={() => setEnlargeMedia(true)}
-                src={data.media}
-                alt={data.media}
-                className="w-[220px] max-h-[320px] object-cover rounded mb-2"
-              />
-              {enlargeMedia && (
-                <Modal>
-                  <div className="mx-4 w-full md:w-6/12 rounded bg-white relative">
-                    <span
-                      onClick={() => setEnlargeMedia(false)}
-                      className="h-10 w-10 transform rotate-45 absolute right-4 top-4 rounded-full bg-gray-100 cursor-pointer   flex items-center justify-center"
-                    >
-                      <BsPlus size={32} className="text-gray-600" />
-                    </span>
-                    <a
-                      href={data.media}
-                      download
-                      className="h-10 w-10 absolute right-16 top-4 rounded-full bg-gray-100 cursor-pointer   flex items-center justify-center"
-                    >
-                      <HiDownload size={24} className="text-gray-600" />
-                    </a>
-
-                    <img
-                      src={data.media}
-                      alt={data.media}
-                      className="w-full h-full object-cover rounded max-h-[420px]"
-                    />
-                  </div>
-                </Modal>
-              )}
-            </>
-=======
             <img
               src={data.media}
               alt={data.media}
               className='w-[220px] rounded mb-2'
             />
->>>>>>> refs/remotes/origin/web
           )}
           {data.message}
           <span className='text-[12px]  block text-left text-gray-200'>
@@ -89,47 +53,11 @@ function Message({ data, type }) {
           />
           <div className='p-2 bg-slate-200 text-gray-600 text-sm  rounded-r-lg  rounded-tl-lg   rounded-sm max-w-[70%] w-max '>
             {data.media && (
-<<<<<<< HEAD
-              <>
-                <img
-                  onClick={() => setEnlargeMedia(true)}
-                  src={data.media}
-                  alt={data.media}
-                  className="w-[220px] max-h-[320px] object-cover  rounded mb-2"
-                />
-                {enlargeMedia && (
-                  <Modal>
-                    <div className="mx-4 w-full md:w-6/12 rounded bg-white relative">
-                      <span
-                        onClick={() => setEnlargeMedia(false)}
-                        className="h-10 w-10 transform rotate-45 absolute right-4 top-4 rounded-full bg-gray-100 cursor-pointer   flex items-center justify-center"
-                      >
-                        <BsPlus size={32} className="text-gray-600" />
-                      </span>
-                      <a
-                        href={data.media}
-                        download
-                        className="h-10 w-10 absolute right-16 top-4 rounded-full bg-gray-100 cursor-pointer   flex items-center justify-center"
-                      >
-                        <HiDownload size={24} className="text-gray-600" />
-                      </a>
-
-                      <img
-                        src={data.media}
-                        alt={data.media}
-                        className="w-full h-full object-cover rounded max-h-[420px]"
-                      />
-                    </div>
-                  </Modal>
-                )}
-              </>
-=======
               <img
                 src={data.media}
                 alt={data.media}
                 className='w-[220px] rounded mb-2'
               />
->>>>>>> refs/remotes/origin/web
             )}
             {data.message}
             <span className='text-[12px]  block text-right text-gray-400'>
