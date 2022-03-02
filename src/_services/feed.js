@@ -38,3 +38,8 @@ export const deleteLike = async (data) => {
   const res = await api.post(`/like/delete`, data, getAuthHeader());
   return res;
 };
+
+export const newsFeed = async (page = 1) => {
+  const res = await api.get(`/post/newsFeed?page=${page}`);
+  return res;
+};
