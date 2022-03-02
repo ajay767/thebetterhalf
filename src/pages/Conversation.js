@@ -10,7 +10,7 @@ import Tippy from "@tippyjs/react";
 import Wrapper from "@layout/Wrapper";
 import { friend } from "@services";
 import { BsPlus } from "react-icons/bs";
-
+import { chat } from "@services";
 import SocketIOFileUpload from "socketio-file-upload";
 import { catchError, getImageFromFile } from "@utils";
 import { IoIosArrowBack } from "react-icons/io";
@@ -30,11 +30,39 @@ function Message({ data, type }) {
       return (
         <div className="p-2 bg-pink-600 mt-2 text-sm rounded-l-lg   min-w-[90px]  rounded-tr-lg     rounded-sm max-w-[75%] w-max  ml-auto text-white ">
           {data.media && (
-            <img
-              src={data.media}
-              alt={data.media}
-              className="w-[220px] rounded mb-2"
-            />
+            <>
+              <img
+                onClick={() => setEnlargeMedia(true)}
+                src={data.media}
+                alt={data.media}
+                className="w-[220px] rounded mb-2"
+              />
+              {enlargeMedia && (
+                <Modal>
+                  <div className="mx-4 w-full md:w-6/12 rounded bg-white relative">
+                    <span
+                      onClick={() => setEnlargeMedia(false)}
+                      className="h-10 w-10 transform rotate-45 absolute right-4 top-4 rounded-full bg-gray-100 cursor-pointer   flex items-center justify-center"
+                    >
+                      <BsPlus size={32} className="text-gray-600" />
+                    </span>
+                    <a
+                      href={data.media}
+                      download
+                      className="h-10 w-10 absolute right-16 top-4 rounded-full bg-gray-100 cursor-pointer   flex items-center justify-center"
+                    >
+                      <HiDownload size={24} className="text-gray-600" />
+                    </a>
+
+                    <img
+                      src={data.media}
+                      alt={data.media}
+                      className="w-full h-full object-cover rounded max-h-[420px]"
+                    />
+                  </div>
+                </Modal>
+              )}
+            </>
           )}
           {data.message}
           <span className="text-[12px]  block text-left text-gray-200">
@@ -53,12 +81,41 @@ function Message({ data, type }) {
           />
           <div className="p-2 bg-slate-200 text-gray-600 text-sm  rounded-r-lg  rounded-tl-lg   rounded-sm max-w-[70%] w-max ">
             {data.media && (
-              <img
-                src={data.media}
-                alt={data.media}
-                className="w-[220px] rounded mb-2"
-              />
+              <>
+                <img
+                  onClick={() => setEnlargeMedia(true)}
+                  src={data.media}
+                  alt={data.media}
+                  className="w-[220px] rounded mb-2"
+                />
+                {enlargeMedia && (
+                  <Modal>
+                    <div className="mx-4 w-full md:w-6/12 rounded bg-white relative">
+                      <span
+                        onClick={() => setEnlargeMedia(false)}
+                        className="h-10 w-10 transform rotate-45 absolute right-4 top-4 rounded-full bg-gray-100 cursor-pointer   flex items-center justify-center"
+                      >
+                        <BsPlus size={32} className="text-gray-600" />
+                      </span>
+                      <a
+                        href={data.media}
+                        download
+                        className="h-10 w-10 absolute right-16 top-4 rounded-full bg-gray-100 cursor-pointer   flex items-center justify-center"
+                      >
+                        <HiDownload size={24} className="text-gray-600" />
+                      </a>
+
+                      <img
+                        src={data.media}
+                        alt={data.media}
+                        className="w-full h-full object-cover rounded max-h-[420px]"
+                      />
+                    </div>
+                  </Modal>
+                )}
+              </>
             )}
+
             {data.message}
             <span className="text-[12px]  block text-right text-gray-400">
               {moment(data.createdAt).calendar()}
@@ -173,21 +230,22 @@ const FileExplorer = React.forwardRef(
 function Conversation() {
   const me = useAuth();
   const fileExplorerRef = useRef();
+  const chatRef = useRef();
   const history = useHistory();
   const param = useParams();
   const [mediaModal, setMediaModal] = useState(false);
   const [messages, setMessages] = useState([]);
   const [fetching, setFetching] = useState(false);
   const [mediaAcknowledge, setMediaAcknowledge] = useState(false);
+  const [typingAcknowledge, setTypingAcknowledge] = useState(false);
   const [user, setUser] = useState({});
 
   const [message, setMessage] = useState("");
   useClickoutside(fileExplorerRef, () => setMediaModal(false));
 
   const handleMessage = () => {
-    if (socket) {
+    if (socket && message) {
       setMessages((e) => {
-        console.log(e);
         return [
           ...e,
           {
@@ -242,13 +300,55 @@ function Conversation() {
         setFetching(false);
       }
     }
+
     fetchUser();
   }, []);
+
+  useEffect(() => {
+    async function fetchChat() {
+      try {
+        setFetching(true);
+        const res = await chat.getChats(param.id);
+        if (res.data.status) {
+          const messages = res.data.chats.map((curr) => {
+            if (curr.sender._id === me._id) {
+              return {
+                type: "SENT",
+                photo: me.profile,
+                createdAt: curr.createdAt,
+                message: curr.message,
+                media: curr.media,
+                name: me.username,
+              };
+            } else {
+              return {
+                type: "RECEIVED",
+                photo: user.profile,
+                createdAt: curr.createdAt,
+                message: curr.message,
+                media: curr.media,
+                name: me.username,
+              };
+            }
+          });
+
+          setMessages(messages);
+        }
+      } catch (error) {
+        catchError(error);
+      } finally {
+        setFetching(false);
+      }
+    }
+
+    if (user) fetchChat();
+  }, [user]);
 
   useEffect(() => {
     const Endpoint = process.env.REACT_APP_SERVER;
 
     if (me._id) {
+      console.log(me);
       socket = socketio(Endpoint, {
         autoConnect: false,
         withCredentials: true,
@@ -272,12 +372,19 @@ function Conversation() {
       });
 
       socket.on("media-sharing-start", () => {
-        console.log("start");
         setMediaAcknowledge(true);
       });
 
       socket.on("media-sharing-end", () => {
         setMediaAcknowledge(false);
+      });
+
+      socket.on("typing-start", () => {
+        setTypingAcknowledge(true);
+      });
+
+      socket.on("typing-end", () => {
+        setTypingAcknowledge(false);
       });
 
       socket.on("users", (list) => {
@@ -305,6 +412,41 @@ function Conversation() {
     };
   }, [me]);
 
+  useEffect(() => {
+    let timeout;
+    const handleKeyDown = (e) => {
+      if (socket && e.keyCode !== 13) {
+        socket.emit("typing-start", user._id);
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          socket.emit("typing-end", user._id);
+        }, 2000);
+      }
+      if (e.keyCode === 13) {
+        handleMessage();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return function () {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [user]);
+
+  useEffect(() => {
+    if (chatRef?.current?.lastElementChild) {
+      const lastElement = 0;
+      const visibleHeight = chatRef.current.offsetHeight;
+      const containerHeight = chatRef.current.scrollHeight;
+      const scrollOffset = chatRef.current.scrollTop + visibleHeight;
+      // if (containerHeight - lastElement <= scrollOffset) {
+      //   chatRef.current.scrollTop = chatRef.current.scrollHeight;
+      // }
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  });
+
   return (
     <Wrapper>
       {fetching ? (
@@ -328,9 +470,11 @@ function Conversation() {
               />
               <div className="text-xs">
                 <p className="font-medium  ">{user?.username}</p>
-                <p className="flex items-center space-x-2">
+                <p className="flex items-center space-x-2 text-gray-500">
                   {mediaAcknowledge ? (
-                    "Sharing media..."
+                    <i>sharing media...</i>
+                  ) : typingAcknowledge ? (
+                    <i>typing...</i>
                   ) : (
                     <>
                       Active
@@ -382,7 +526,10 @@ function Conversation() {
             </Tippy>
           </div>
 
-          <div className="border-t-[1px] border-gray-200 p-3 flex-grow overflow-y-scroll  scrollbar-hide flex flex-col text-sm md:text-xs  ">
+          <div
+            ref={chatRef}
+            className="border-t-[1px] border-gray-200 p-3 flex-grow overflow-y-scroll  scrollbar-hide flex flex-col text-sm md:text-xs  "
+          >
             <span className="text-xs mt-2 text-white bg-gray-500 shadow mx-auto block w-max p-1 px-2 rounded">
               Today
             </span>
