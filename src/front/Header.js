@@ -40,6 +40,12 @@ function Header() {
                 Profile
               </Link>
               <Link
+                to="/search"
+                className="text-sm px-4 p-2 block hover:bg-black text-white"
+              >
+                Search
+              </Link>
+              <Link
                 to="/notification"
                 className="text-sm px-4 p-2 block hover:bg-black text-white"
               >

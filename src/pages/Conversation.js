@@ -463,11 +463,13 @@ function Conversation() {
               >
                 <IoIosArrowBack size={22} />
               </span>
-              <img
-                src={user?.profile}
-                alt={user?.username}
-                className="h-10 w-10 rounded-full object-cover flex-shrink-0"
-              />
+              <Link to={`/user/${user._id}`}>
+                <img
+                  src={user?.profile}
+                  alt={user?.username}
+                  className="h-10 w-10 rounded-full object-cover flex-shrink-0"
+                />
+              </Link>
               <div className="text-xs">
                 <p className="font-medium  ">{user?.username}</p>
                 <p className="flex items-center space-x-2 text-gray-500">

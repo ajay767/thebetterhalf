@@ -17,6 +17,7 @@
     "formik": "^2.2.9",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mongoose": "^6.2.2",
     "rc-progress": "^3.2.4",

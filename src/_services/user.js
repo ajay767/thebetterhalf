@@ -35,3 +35,8 @@ export const oneTapLogin = async (data) => {
   const res = await api.post("/auth/one-tap-login", data);
   return res;
 };
+
+export const searchUser = async (key) => {
+  const res = await api.get(`/auth/user-search?word=${key}`);
+  return res;
+};

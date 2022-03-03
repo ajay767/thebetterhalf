@@ -10,6 +10,7 @@ import Conversation from "@pages/Conversation";
 import Notification from "@pages/Notification";
 import Friends from "@pages/friends";
 import Setting from "@pages/setting";
+import Search from "@pages/Search";
 
 const routes = [
   { path: "/launch", component: Landing, auth: false, exact: true },
@@ -26,6 +27,7 @@ const routes = [
   { path: "/notification", component: Notification, auth: true, exact: true },
   { path: "/profile", component: Profile, auth: true, exact: true },
   { path: "/setting", component: Setting, auth: true, exact: true },
+  { path: "/search", component: Search, auth: true, exact: true },
   { path: "/chat", component: Chat, auth: true, exact: true },
   { path: "/chat/:id", component: Conversation, auth: true, exact: true },
   { path: "/user/:id", component: User, auth: true, exact: true },
