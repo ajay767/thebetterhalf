@@ -22,10 +22,32 @@ import { feed } from '@services';
 
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-function FeedCard({ username, profile, image, liked, comment }) {
+function FeedCard({
+  username,
+  totalLikes,
+  profile,
+  image,
+  liked,
+  comment,
+  postId,
+  userId,
+  ...props
+}) {
   const [reacted, setreacted] = useState(liked);
+  const [totalLiked, setTotalLiked] = useState(totalLikes);
+  const handleLikes = async () => {
+    setreacted(!reacted);
+    const data = { postId };
+    if (reacted) {
+      setTotalLiked(totalLiked - 1);
+      feed.deleteLike(data);
+    } else {
+      setTotalLiked(totalLiked + 1);
+      feed.createLike(data);
+    }
+  };
   return (
-    <div className='my-4'>
+    <div {...props} className='my-4'>
       <div className='py-2 flex items-center justify-between'>
         <span className='flex items-center'>
           <img
@@ -51,13 +73,13 @@ function FeedCard({ username, profile, image, liked, comment }) {
       </div>
       <div className='flex justify-around bg-white'>
         <span
-          onClick={() => setreacted((e) => !e)}
+          onClick={() => handleLikes()}
           className={` flex-grow justify-center  text-xs font-medium p-2 px-4 ${
             reacted ? 'text-pink-500' : 'hover:bg-gray-100 '
           } cursor-pointer flex items-center space-x-2`}
         >
           <AiOutlineLike size={18} />
-          35 Like
+          {totalLiked} Like
         </span>
         <span className=' flex-grow justify-center  text-xs font-medium p-2 px-4 hover:bg-gray-100 cursor-pointer flex items-center space-x-2'>
           <FaRegComment size={18} />
@@ -189,12 +211,21 @@ function Home() {
         next={() => setPage(page + 1)}
         hasMore={hasMore}
       >
-        {newsFeedPosts.map((post) => {
+        {newsFeedPosts.map((post, idx) => {
+          const totalLikes = post?.likes.length;
+          const liked = post.likes.find(({ userId }) => {
+            return userId == user._id;
+          });
+          console.log(liked);
           return (
             <FeedCard
+              postId={post._id}
+              userId={user._id}
+              totalLikes={totalLikes}
+              key={post.userId.username + ' ' + idx}
               username={post.userId.username}
               profile={post.userId.profile}
-              liked
+              liked={liked}
               image={post?.poster[0]}
               comment={{
                 author: post?.comments[0]?.userId?.username,
