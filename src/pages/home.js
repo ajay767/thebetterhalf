@@ -222,7 +222,7 @@ function Home() {
               postId={post._id}
               userId={user._id}
               totalLikes={totalLikes}
-              key={post.userId.username + ' ' + idx}
+              key={post._id}
               username={post.userId.username}
               profile={post.userId.profile}
               liked={liked}
