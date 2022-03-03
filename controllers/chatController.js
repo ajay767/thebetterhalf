@@ -43,7 +43,7 @@ exports.createChat = async (req, res, next) => {
       media,
     });
     res.json({
-      status: "Success",
+      status: true,
       newMessage,
     });
   } catch (err) {
@@ -98,6 +98,22 @@ exports.getChats = async (req, res, next) => {
 exports.getChatOverview = async (req, res, next) => {
   try {
     const user = req.user._id;
+    const chatList = await Chat.find({
+      $or: [
+        {
+          user1: user,
+        },
+        {
+          user2: user,
+        },
+      ],
+    })
+      .populate("user1")
+      .populate("user2");
+    res.json({
+      status: true,
+      data: chatList,
+    });
   } catch (err) {
     console.log(err);
     next(err);
