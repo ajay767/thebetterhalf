@@ -25,7 +25,9 @@ exports.createPost = async (req, res, next) => {
 exports.getPost = async (req, res, next) => {
   try {
     const { postId } = req.params;
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).populate([
+      { path: "likes", select: "userId" },
+    ]);
     if (!post) {
       return next(new AppError("Post is unavailble", 400));
     }
