@@ -25,7 +25,7 @@ export const getComments = async (id) => {
   const res = await api.get(`/comment/getcomments/${id}`, getAuthHeader());
   return res;
 };
-export const getLikes = async (id) => {
+export const getPost = async (id) => {
   const res = await api.get(`/post/getPost/${id}`);
   return res;
 };
