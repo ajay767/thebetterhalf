@@ -1,26 +1,26 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   deleteUserAccount,
   getUserAccounts,
   setUserAccount,
   setToken,
-} from "@constant";
-import { Link, useHistory } from "react-router-dom";
-import { user } from "@services";
-import { Button } from "@ui";
-import { Formik, Field, ErrorMessage, Form } from "formik";
-import * as Yup from "yup";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import Tippy from "@tippyjs/react";
-import { catchError } from "@utils";
-import { useAuth } from "@context/authContext";
-import userPng from "@assets/avtar/user.png";
-import john from "@assets/images/user4.jpeg";
-import john2 from "@assets/images/user5.jpeg";
-import toast from "react-hot-toast";
-import moment from "moment";
+} from '@constant';
+import { Link, useHistory } from 'react-router-dom';
+import { user } from '@services';
+import { Button } from '@ui';
+import { Formik, Field, ErrorMessage, Form } from 'formik';
+import * as Yup from 'yup';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import Tippy from '@tippyjs/react';
+import { catchError } from '@utils';
+import { useAuth } from '@context/authContext';
+import userPng from '@assets/avtar/user.png';
+import john from '@assets/images/user4.jpeg';
+import john2 from '@assets/images/user5.jpeg';
+import toast from 'react-hot-toast';
+import moment from 'moment';
 
-function InputField({ label, name, placeholder, type = "text" }) {
+function InputField({ label, name, placeholder, type = 'text' }) {
   return (
     <div className="flex flex-col ">
       <label className="text-sm mb-1">{label}</label>
@@ -50,8 +50,8 @@ function LoginUserCard({
   const [processing, setProcessing] = useState(false);
   return (
     <div
-      className={` flex p-2 px-4 bg-white shadow-md ring-slate-100 ring-1 rounded-md w-full  items-center justify-between space-x-2 my-2 ${
-        processing ? " bg-gray-400 bg-opacity-40 " : ""
+      className={` flex p-2 px-4 bg-white shadow-md ring-slate-100 ring-1 rounded-md w-full  items-center justify-between space-y-2 my-2 ${
+        processing ? ' bg-gray-400 bg-opacity-40 ' : ''
       }`}
     >
       <div
@@ -121,7 +121,7 @@ function Login() {
         createdAt: new Date(),
       });
       setTimeout(() => {
-        history.push("/home");
+        history.push('/home');
       }, 200);
     }
   };
@@ -156,15 +156,15 @@ function Login() {
         </h1>
         {formState && (
           <Formik
-            initialValues={{ password: "", email_mobile_username: "" }}
+            initialValues={{ password: '', email_mobile_username: '' }}
             validationSchema={Yup.object({
-              password: Yup.string().min(8).required("Required"),
-              email_mobile_username: Yup.string().required("Required"),
+              password: Yup.string().min(8).required('Required'),
+              email_mobile_username: Yup.string().required('Required'),
             })}
             onSubmit={handleLogin}
           >
             {(e) => (
-              <Form className="flex flex-col space-x-2 mt-8">
+              <Form className="flex flex-col space-y-2 mt-8">
                 <InputField name="email_mobile_username" label="Email" />
                 <InputField name="password" type="Password" label="Password" />
                 <p className="text-right text-sm text-gray-500">
@@ -204,7 +204,7 @@ function Login() {
             </p>
           </div>
         )}
-        <p className="text-sm text-center mb-2">
+        <p className="text-sm text-center my-2">
           <Link
             to="/signup"
             className="rounded p-2 px-4 block bg-pink-600 text-white "
@@ -213,7 +213,7 @@ function Login() {
           </Link>
         </p>
         <p className="text-xs text-center text-gray-500">
-          &copy; {new Date().getFullYear()}{" "}
+          &copy; {new Date().getFullYear()}{' '}
           <a href="/" className="underline ">
             thebetterhalf.in
           </a>

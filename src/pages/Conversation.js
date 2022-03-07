@@ -244,8 +244,15 @@ function Conversation() {
   useClickoutside(fileExplorerRef, () => setMediaModal(false));
 
   const scrollToBottom = () => {
-    console.log('scrolling bottom', chatRef.current.lastElementChild);
-    chatRef.current?.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
+    if (chatRef?.current?.lastElementChild) {
+      const lastElement = 150;
+      const visibleHeight = chatRef.current.offsetHeight;
+      const containerHeight = chatRef.current.scrollHeight;
+      const scrollOffset = chatRef.current.scrollTop + visibleHeight;
+      if (containerHeight - lastElement <= scrollOffset) {
+        chatRef.current.scrollTop = chatRef.current.scrollHeight;
+      }
+    }
   };
 
   const handleMessage = () => {
@@ -440,15 +447,7 @@ function Conversation() {
   }, [user]);
 
   useEffect(() => {
-    if (chatRef?.current?.lastElementChild) {
-      const lastElement = 150;
-      const visibleHeight = chatRef.current.offsetHeight;
-      const containerHeight = chatRef.current.scrollHeight;
-      const scrollOffset = chatRef.current.scrollTop + visibleHeight;
-      if (containerHeight - lastElement <= scrollOffset) {
-        chatRef.current.scrollTop = chatRef.current.scrollHeight;
-      }
-    }
+    scrollToBottom();
   });
 
   return (
