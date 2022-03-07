@@ -1,9 +1,9 @@
-import React from "react";
-import { Link, useHistory } from "react-router-dom";
-import { useAuth } from "@context/authContext";
-import profile from "@assets/images/friend-landing.jpg";
-import { IoNotificationsSharp } from "react-icons/io5";
-import Tippy from "@tippyjs/react";
+import React from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { useAuth } from '@context/authContext';
+import profile from '@assets/images/friend-landing.jpg';
+import { IoNotificationsSharp } from 'react-icons/io5';
+import Tippy from '@tippyjs/react';
 
 function Header() {
   const history = useHistory();
@@ -27,7 +27,7 @@ function Header() {
         <Tippy
           interactive
           arrow={false}
-          trigger="mouseenter"
+          trigger="click"
           delay={0}
           theme="light"
           className="!bg-transparent   "

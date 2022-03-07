@@ -1,32 +1,32 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useAuth } from "@context/authContext";
-import { Link, useHistory, useParams } from "react-router-dom";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { HiDownload } from "react-icons/hi";
-import { MdInsertPhoto } from "react-icons/md";
-import { RiSendPlaneFill } from "react-icons/ri";
-import socketio from "socket.io-client";
-import Tippy from "@tippyjs/react";
-import Wrapper from "@layout/Wrapper";
-import { friend } from "@services";
-import { BsPlus } from "react-icons/bs";
-import { chat } from "@services";
-import SocketIOFileUpload from "socketio-file-upload";
-import { catchError, getImageFromFile } from "@utils";
-import { IoIosArrowBack } from "react-icons/io";
-import user1 from "@assets/images/p6.jpg";
-import Modal from "@components/Modal";
-import moment from "moment";
-import { uploadImageFile } from "@utils";
-import { useClickoutside } from "@hooks";
-import { Line } from "rc-progress";
+import React, { useEffect, useState, useRef } from 'react';
+import { useAuth } from '@context/authContext';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { HiDownload } from 'react-icons/hi';
+import { MdInsertPhoto } from 'react-icons/md';
+import { RiSendPlaneFill } from 'react-icons/ri';
+import socketio from 'socket.io-client';
+import Tippy from '@tippyjs/react';
+import Wrapper from '@layout/Wrapper';
+import { friend } from '@services';
+import { BsPlus } from 'react-icons/bs';
+import { chat } from '@services';
+import SocketIOFileUpload from 'socketio-file-upload';
+import { catchError, getImageFromFile } from '@utils';
+import { IoIosArrowBack } from 'react-icons/io';
+import user1 from '@assets/images/p6.jpg';
+import Modal from '@components/Modal';
+import moment from 'moment';
+import { uploadImageFile } from '@utils';
+import { useClickoutside } from '@hooks';
+import { Line } from 'rc-progress';
 let socket = null;
 
 function Message({ data, type }) {
   const [enlargeMedia, setEnlargeMedia] = useState(false);
 
   switch (type) {
-    case "SENT": {
+    case 'SENT': {
       return (
         <div className="p-2 bg-pink-600 mt-2 text-sm rounded-l-lg   min-w-[90px]  rounded-tr-lg     rounded-sm max-w-[75%] w-max  ml-auto text-white ">
           {data.media && (
@@ -71,7 +71,7 @@ function Message({ data, type }) {
         </div>
       );
     }
-    case "RECEIVED": {
+    case 'RECEIVED': {
       return (
         <div className="flex items-end mt-2 space-x-2">
           <img
@@ -134,7 +134,7 @@ function Message({ data, type }) {
 const FileExplorer = React.forwardRef(
   ({ handleMedia, emitEndEvent, emitStartEvent }, ref) => {
     const [file, setFile] = useState(null);
-    const [message, setMessage] = useState("");
+    const [message, setMessage] = useState('');
     const [progress, setProgress] = useState(0);
     const [uploading, setUploading] = useState(false);
 
@@ -165,7 +165,7 @@ const FileExplorer = React.forwardRef(
       >
         <div
           className={`border border-gray-400     border-dashed  p-4 rounded h-[320px] ${
-            !file ? " grid place-content-center " : ""
+            !file ? ' grid place-content-center ' : ''
           }`}
         >
           {file ? (
@@ -198,7 +198,7 @@ const FileExplorer = React.forwardRef(
         {uploading && (
           <div className="mb-4">
             <p className="text-sm text-gray-600 mb-2">
-              {" "}
+              {' '}
               Uploading file {progress}%
             </p>
             <Line percent={progress} strokeWidth="1" strokeColor="#2a2a2a" />
@@ -240,8 +240,13 @@ function Conversation() {
   const [typingAcknowledge, setTypingAcknowledge] = useState(false);
   const [user, setUser] = useState({});
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   useClickoutside(fileExplorerRef, () => setMediaModal(false));
+
+  const scrollToBottom = () => {
+    console.log('scrolling bottom', chatRef.current.lastElementChild);
+    chatRef.current?.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const handleMessage = () => {
     if (socket && message) {
@@ -249,7 +254,7 @@ function Conversation() {
         return [
           ...e,
           {
-            type: "SENT",
+            type: 'SENT',
             photo: me.profile,
             createdAt: new Date(),
             message: message,
@@ -257,9 +262,9 @@ function Conversation() {
           },
         ];
       });
-      socket.emit("message", { message, media: null }, user._id);
+      socket.emit('message', { message, media: null }, user._id);
 
-      setMessage("");
+      setMessage('');
     }
   };
 
@@ -270,7 +275,7 @@ function Conversation() {
         return [
           ...e,
           {
-            type: "SENT",
+            type: 'SENT',
             photo: me.profile,
             createdAt: new Date(),
             message: message,
@@ -279,8 +284,8 @@ function Conversation() {
           },
         ];
       });
-      socket.emit("message", { message, media }, user._id);
-      setMessage("");
+      socket.emit('message', { message, media }, user._id);
+      setMessage('');
     }
 
     setMediaModal(false);
@@ -313,7 +318,7 @@ function Conversation() {
           const messages = res.data.chats.map((curr) => {
             if (curr.sender._id === me._id) {
               return {
-                type: "SENT",
+                type: 'SENT',
                 photo: me.profile,
                 createdAt: curr.createdAt,
                 message: curr.message,
@@ -322,7 +327,7 @@ function Conversation() {
               };
             } else {
               return {
-                type: "RECEIVED",
+                type: 'RECEIVED',
                 photo: user.profile,
                 createdAt: curr.createdAt,
                 message: curr.message,
@@ -357,11 +362,11 @@ function Conversation() {
       socket.auth = { userId: me._id };
       socket.connect();
 
-      socket.on("message", ({ message, media }) => {
+      socket.on('message', ({ message, media }) => {
         setMessages((e) => [
           ...e,
           {
-            type: "RECEIVED",
+            type: 'RECEIVED',
             photo: user.profile,
             createdAt: new Date(),
             message: message,
@@ -371,35 +376,35 @@ function Conversation() {
         ]);
       });
 
-      socket.on("media-sharing-start", () => {
+      socket.on('media-sharing-start', () => {
         setMediaAcknowledge(true);
       });
 
-      socket.on("media-sharing-end", () => {
+      socket.on('media-sharing-end', () => {
         setMediaAcknowledge(false);
       });
 
-      socket.on("typing-start", () => {
+      socket.on('typing-start', () => {
         setTypingAcknowledge(true);
       });
 
-      socket.on("typing-end", () => {
+      socket.on('typing-end', () => {
         setTypingAcknowledge(false);
       });
 
-      socket.on("users", (list) => {
+      socket.on('users', (list) => {
         // console.log(list);
       });
 
-      socket.on("media", (data) => {
+      socket.on('media', (data) => {
         console.log(data);
       });
 
-      socket.on("disconnect", () => {
-        console.log("disconnected");
+      socket.on('disconnect', () => {
+        console.log('disconnected');
       });
 
-      socket.on("connect_error", (err) => {
+      socket.on('connect_error', (err) => {
         console.log(err.message);
       });
     }
@@ -416,10 +421,10 @@ function Conversation() {
     let timeout;
     const handleKeyDown = (e) => {
       if (socket && e.keyCode !== 13) {
-        socket.emit("typing-start", user._id);
+        socket.emit('typing-start', user._id);
         clearTimeout(timeout);
         timeout = setTimeout(() => {
-          socket.emit("typing-end", user._id);
+          socket.emit('typing-end', user._id);
         }, 2000);
       }
       if (e.keyCode === 13) {
@@ -427,23 +432,22 @@ function Conversation() {
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
 
     return function () {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [user]);
 
   useEffect(() => {
     if (chatRef?.current?.lastElementChild) {
-      const lastElement = 0;
+      const lastElement = 150;
       const visibleHeight = chatRef.current.offsetHeight;
       const containerHeight = chatRef.current.scrollHeight;
       const scrollOffset = chatRef.current.scrollTop + visibleHeight;
-      // if (containerHeight - lastElement <= scrollOffset) {
-      //   chatRef.current.scrollTop = chatRef.current.scrollHeight;
-      // }
-      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+      if (containerHeight - lastElement <= scrollOffset) {
+        chatRef.current.scrollTop = chatRef.current.scrollHeight;
+      }
     }
   });
 
@@ -452,8 +456,8 @@ function Conversation() {
       {fetching ? (
         <p className="text-sm text-gray-500 text-center my-16">Loading...</p>
       ) : (
-        <div className="flex flex-col min-h-screen relative ">
-          <div className="flex items-center space-x-2 p-4 bg-white py-2 justify-between flex-shrink-0 sticky top-0">
+        <div className="flex flex-col min-h-screen max-h-screen relative ">
+          <div className="flex items-center space-x-2 p-4 bg-white py-2 justify-between flex-shrink-0 ">
             <div className="flex items-center space-x-2 ">
               <span
                 className="h-10 grid place-content-center cursor-pointer text-gray-700"
@@ -543,17 +547,17 @@ function Conversation() {
             <Modal>
               <FileExplorer
                 emitStartEvent={() => {
-                  socket.emit("media-sharing-start", user._id);
+                  socket.emit('media-sharing-start', user._id);
                 }}
                 emitEndEvent={() => {
-                  socket.emit("media-sharing-end", user._id);
+                  socket.emit('media-sharing-end', user._id);
                 }}
                 handleMedia={handleMediaMessage}
                 ref={fileExplorerRef}
               />
             </Modal>
           )}
-          <div className="bg-slate-400 p-2 flex-shrink-0 flex items-end space-x-2 sticky bottom-0  ">
+          <div className="bg-slate-400 p-2 flex-shrink-0 flex items-end space-x-2   ">
             <label
               onClick={() => setMediaModal(true)}
               className="cursor-pointer  "
@@ -577,7 +581,7 @@ function Conversation() {
             </span>
           </div>
         </div>
-      )}{" "}
+      )}{' '}
     </Wrapper>
   );
 }
