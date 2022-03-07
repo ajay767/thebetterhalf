@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
-import { toast } from "react-hot-toast";
-import friend from "@assets/images/friend-landing.jpg";
+import React, { useEffect } from 'react';
+import { toast } from 'react-hot-toast';
+import friend from '@assets/images/friend-landing.jpg';
+import { Link } from 'react-router-dom';
 
 function Landing() {
   useEffect(() => {
-    document.title = "Find your better half";
+    document.title = 'Find your better half';
   }, []);
   return (
     <div className="min-h-screen grid md:grid-cols-12">
@@ -30,24 +31,20 @@ function Landing() {
           </div>
           <div className="shadow-md p-2 pl-4 bg-white rounded-md flex items-center w-11/12 md:w-[440px]">
             <input
+              disabled
               className=" text-sm md:text-base text-gray-700 flex-grow border-0 outline-none"
-              placeholder="Enter your email"
+              placeholder="Find Your Friends"
             />
-            <button
-              onClick={() => {
-                toast("currently our server is under maintainance.", {
-                  icon: "🛠",
-                });
-              }}
-              className="flex-shrink-0  border-0 ring-0 active:bg-pink-700 bg-pink-600 text-white text-sm  p-2 px-4 rounded-md"
-            >
-              Get Notified
-            </button>
+            <Link to="/home">
+              <button className="flex-shrink-0  border-0 ring-0 active:bg-pink-700 bg-pink-600 text-white text-sm  p-2 px-4 rounded-md">
+                Dashboard
+              </button>
+            </Link>
           </div>
         </div>
         <div className="">
           <p className="text-sm text-gray-500">
-            &copy; {new Date().getFullYear()}{" "}
+            &copy; {new Date().getFullYear()}{' '}
             <a href="/" className="underline ">
               thebetterhalf.in
             </a>
