@@ -25,7 +25,7 @@ const routes = [
   },
   { path: '/home', component: Home, auth: true, exact: true },
   { path: '/friends', component: Friends, auth: true, exact: false },
-  { path: '/notification', component: Notification, auth: true, exact: true },
+  // { path: '/notification', component: Notification, auth: true, exact: true },
   { path: '/profile', component: Profile, auth: true, exact: true },
   { path: '/setting', component: Setting, auth: true, exact: true },
   { path: '/search', component: Search, auth: true, exact: true },

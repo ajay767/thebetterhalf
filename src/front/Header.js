@@ -11,12 +11,12 @@ function Header() {
   return (
     <div className="grid grid-cols-3 sticky bg-white z-[1000] top-0 py-2 ">
       <div className="  mt-2">
-        <div className="relative w-max cursor-pointer">
+        {/* <div className="relative w-max cursor-pointer">
           <IoNotificationsSharp size={28} />
           <span className="bg-pink-600 text-white flex items-center justify-center rounded-full h-5 w-5 text-xs absolute -top-2 right-0">
             4
           </span>
-        </div>
+        </div> */}
       </div>
       <Link to="/home">
         <h1 className=" font-medium text-3xl text-center logo__text">
@@ -45,12 +45,12 @@ function Header() {
               >
                 Search
               </Link>
-              <Link
+              {/* <Link
                 to="/notification"
                 className="text-sm px-4 p-2 block hover:bg-black text-white"
               >
                 Notification
-              </Link>
+              </Link> */}
               <Link
                 to="/chat"
                 className="text-sm px-4 p-2 block hover:bg-black text-white"
