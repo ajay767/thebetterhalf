@@ -64,7 +64,7 @@ function FeedCard({
       </div>
       <div className="bg-slate-100">
         <Link to={`/feed/${postId}`}>
-          <div className="relative aspect-square w-full md:w-auto md:h-[540px] mx-auto  overflow-hidden">
+          <div className="relative w-full md:w-auto h-[540px] mx-auto  overflow-hidden">
             <LazyLoadImage
               effect="opacity"
               alt="profile picture"
