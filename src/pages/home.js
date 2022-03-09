@@ -86,7 +86,7 @@ function FeedCard({
         </span>
         <Link to={`/feed/${postId}`} className=" flex-grow">
           <span className=" justify-center  text-xs font-medium p-2 px-4 hover:bg-gray-100 cursor-pointer flex items-center space-x-2">
-            <FaRegComment size={18} />
+            <FaRegComment size={18} className="mr-2" />
             Comment
           </span>
         </Link>
